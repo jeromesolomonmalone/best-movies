@@ -1,2 +1,73 @@
 <!DOCTYPE html>
-<html lang="ru"></html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./styles/style.css">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=STIX+Two+Text:ital,wght@0,400..700;1,400..700&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+  <header class="header">
+    <div class="header_title_wrapper">
+      <h1 class="header_title"><span class="header_title_count"></span> <span class="header_title_case"></span>
+        21&nbsp;века</h1>
+    </div>
+    <div class="header_videos_wrapper">
+      <div class="header_videos"></div>
+    </div>
+  </header>
+  <main class="main">
+    <div class="all_movies"></div>
+    <div class="watchlist" id="watchlist">
+      <div class="have_watched_container" id="have_watched_container">
+        <div class="watchlist_wrapper">
+          <p class="watchlist_title">Я еще не смотрел ни один из этих фильмов...</p>
+        </div>
+        <button disabled>Copy link</button>
+        <div class="watchlist_movie_list"></div>
+      </div>
+      <div class="want_to_watch_container" id="want_to_watch_container">
+        <div class="watchlist_wrapper">
+          <p class="watchlist_title">...но я уверен, что здесь есть кое-что и для меня.</p>
+        </div>
+        <button disabled>Copy link</button>
+        <div class="watchlist_movie_list"></div>
+      </div>
+    </div>
+  </main>
+  <template id="movie-template">
+    <div class="movie_item">
+      <div class="movie_header">
+        <div class="movie_video_wrapper">
+          <video class="movie_video" src="" poster="" loop muted playsinline="true">
+        </div>
+        <h3 class="movie_place"></h3>
+        <h2 class="movie_name"></h2>
+        <p class="movie_director_and_year"></p>
+      </div>
+      <p class="movie_opinion"></p>
+      <div class="movie_quotes"></div>
+      <div class="saving_box">
+        <img class="saving_poster" src="" alt="" />
+        <div class="checkboxes_box">
+          <label class="checkbox_label">
+            <input type="checkbox" name="already-seen">
+            <span>Я видел это</span>
+          </label>
+          <label class="checkbox_label">
+            <input type="checkbox" name="want-to-watch">
+            <span>Я хочу посмотреть это</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script src="./scripts/script.js"></script>
+</body>
+
+</html>
