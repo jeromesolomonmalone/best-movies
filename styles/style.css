@@ -1,7 +1,30 @@
 :root {
-  --imperial: "Tinos", serif;
-  /*   --imperial: "STIX Two Text", serif; */
+  --imperial: "STIX Two Text", serif;
   --cheltenham: "Noto Serif", serif;
+  --franklin: "Libre Franklin", sans-serif;
+  --stymiehed: "Alfa Slab One", serif;
+  --background: #fff;
+  --background-reverse: #121212;
+  --saving-background: #f2f2f2;
+  --main-color: #333;
+  --body-color: #333;
+  --color-secondary: #999;
+  --border: #e5e5e5;
+  --border-navigation: #ccc;
+  --width-body: 600px;
+}
+
+@media (prefers-color-scheme: dark), .dark-theme {
+  :root {
+    --background: #121212;
+    --background-reverse: #fff;
+    --saving-background: #272728;
+    --main-color: #f8f8f8;
+    --body-color: #fff;
+    --color-secondary: #9c9c9c;
+    --border: #dfdfdf;
+    --border-navigation: rgb(255 255 255 / 24%);
+  }
 }
 
 *,
@@ -39,8 +62,9 @@ video {
 body {
   margin: 0;
   padding: 0;
-  overflow: unset;
+  color: var(--main-color);
   font-family: var(--cheltenham);
+  background: var(--background);
   block-size: 100%;
 }
 
@@ -58,7 +82,7 @@ body {
   padding-inline: 10px;
   inline-size: 100%;
   min-block-size: 100svh;
-  max-inline-size: 600px;
+  max-inline-size: var(--width-body);
 }
 
 .header_title {
@@ -93,7 +117,7 @@ body {
   margin-inline: auto;
   inline-size: 100%;
   block-size: 100%;
-  max-inline-size: 600px;
+  max-inline-size: var(--width-body);
 }
 
 .header_video_block {
@@ -113,4 +137,354 @@ body {
 
 .header_video {
   inline-size: 100%;
+}
+
+.main_text {
+  margin-inline: auto;
+  margin-block-end: 24px;
+  padding: 0 20px;
+  font-family: var(--imperial);
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 1.6;
+  max-inline-size: var(--width-body);
+}
+
+.navigation {
+  position: sticky;
+  top: -1px;
+  z-index: 1000;
+  padding: 10px 20px 0;
+  opacity: 0;
+  overflow-x: unset;
+  background: var(--background);
+  transition: all 0.3s;
+  inline-size: 100%;
+}
+
+.navigation.open {
+  border-block-end: 1px solid var(--border-navigation);
+  opacity: 1;
+}
+
+.navigation_wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  margin: 0 auto;
+  padding-block-start: 10px;
+  inline-size: fit-content;
+  block-size: 46px;
+}
+
+.navigation_places {
+  display: flex;
+  gap: 20px;
+  border-inline-end: 1px solid var(--border);
+  padding-inline-end: 20px;
+}
+
+.navigation_wrapper a {
+  font-family: var(--franklin);
+  font-weight: 500;
+  font-size: 14px;
+  text-decoration: underline;
+  text-decoration-color: var(--background);
+  transition: all 0.2s;
+}
+
+.navigation_places a:hover {
+  text-decoration-color: var(--background-reverse);
+}
+
+.navigation_watchlist {
+  padding-inline-start: 20px;
+}
+
+.navigation_link div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.navigation_link p {
+  display: inline-flex;
+  align-items: baseline;
+  white-space: nowrap;
+}
+
+.num {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  height: 20px;
+  opacity: 1;
+  font-weight: 700;
+  font-size: 13px;
+  transition: opacity 0.3s ease;
+}
+
+.num.fade-out {
+  opacity: 0;
+}
+
+.movie_item {
+  margin-inline: auto;
+  margin-block: 60px;
+  padding: 20px 0;
+  overflow-x: hidden;
+  inline-size: 100%;
+  max-inline-size: 1230px;
+}
+
+.movie_video_wrapper {
+  position: relative;
+  padding: 0 0 56.25%;
+}
+
+.movie_video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.movie_place {
+  position: absolute;
+  bottom: 74px;
+  left: 50%;
+  display: block;
+  width: calc(100% - 40px);
+  max-width: 600px;
+  color: #ffffff;
+  font-family: var(--stymiehed);
+  font-weight: 900;
+  font-size: 133px;
+  line-height: 64px;
+  transform: translate3d(-50%, 0, 0);
+}
+
+.movie_header_text {
+  margin: 30px auto 49px;
+  inline-size: calc(100% - 40px);
+  max-inline-size: var(--width-body);
+}
+
+.movie_name {
+  margin-block-end: -8px;
+  color: var(--body-color);
+  font-weight: 500;
+  font-size: 33px;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+}
+
+.movie_director_and_year {
+  color: var(--color-secondary);
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 1.454545454545455;
+}
+
+.movie_text {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin: 0 auto;
+  inline-size: calc(100% - 40px);
+  max-inline-size: var(--width-body);
+}
+
+.movie_opinion {
+  font-family: var(--imperial);
+  font-size: 1.25rem;
+  line-height: 1.5;
+}
+
+.movie_quotes {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.movie_quote {
+  border-inline-start: 1px solid var(--border-navigation);
+  padding-inline-start: 20px;
+}
+
+.movie_quote p:first-child {
+  font-weight: 300;
+  font-size: 22px;
+  font-style: italic;
+  line-height: 1.25;
+}
+
+.movie_quote p:last-child {
+  margin-block-start: 13px;
+  color: var(--color-secondary);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 1.25;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.saving_box {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  border-radius: 3px;
+  padding: 20px;
+  background-color: var(--saving-background);
+}
+
+.saving_poster {
+  block-size: auto;
+  inline-size: 82px;
+}
+
+.checkboxes_box {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.checkbox_label .checkbox {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  margin-top: -8px;
+  outline: none;
+}
+
+.checkbox_label .checkbox::before {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 16px;
+  height: 16px;
+  border: 1px solid red;
+  border-radius: 3px;
+  background-color: green;
+  pointer-events: none;
+}
+
+.checkbox_label span {
+  padding-left: 5px;
+  font-weight: 700;
+  font-size: 23px;
+  cursor: pointer;
+}
+
+.copy-button svg {
+  fill: black;
+  inline-size: 50px;
+  block-size: 50px;
+}
+
+.copy-notification {
+  display: inline-block;
+  margin-top: 8px;
+  border-radius: 4px;
+  padding: 6px 12px;
+  opacity: 0;
+  color: white;
+  font-size: 0.875rem;
+  background-color: #4caf50;
+  transition: opacity 0.2s ease;
+  pointer-events: none; /* Не мешает кликам */
+}
+
+.copy-notification.show {
+  opacity: 1;
+}
+
+@media screen and (max-width: 1010px) {
+  .movie_video_wrapper {
+    padding: 0;
+  }
+
+  .movie_video {
+    position: relative;
+    aspect-ratio: 1.7777777777777777;
+  }
+
+  .movie_place {
+    position: relative;
+    top: 0;
+    left: 0;
+    margin: 30px auto -19px;
+    color: var(--main-color);
+    font-size: 61px;
+    line-height: 55px;
+    transform: translate3d(0, 0, 0);
+  }
+
+  .movie_header_text {
+    margin: 26px auto 49px;
+  }
+
+  .movie_name {
+    margin: 0;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 1.222222222222222;
+  }
+
+  .movie_director_and_year {
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 1.222222222222222;
+  }
+}
+
+@media screen and (max-width: 740px) {
+  .header_title_wrapper {
+    inline-size: 75%;
+  }
+
+  .header_title {
+    font-size: 21px;
+  }
+
+  .header_title_count {
+    font-size: 5.65em;
+  }
+
+  .header_video_block {
+    inline-size: 60%;
+  }
+
+  .main_text {
+    font-size: 1rem;
+    line-height: 1.4375rem;
+  }
+
+  .movie_opinion {
+    font-size: 17px;
+    line-height: 1.5;
+  }
+
+  .movie_quote {
+    padding-inline-start: 15px;
+  }
+
+  .movie_quote p:first-child {
+    font-size: 1.125rem;
+    line-height: 1.38;
+  }
+
+  .movie_quote p:last-child {
+    margin-block-start: 8px;
+    font-size: 14px;
+    line-height: 1.35;
+  }
+
+  .saving_poster {
+    inline-size: 72px;
+  }
 }

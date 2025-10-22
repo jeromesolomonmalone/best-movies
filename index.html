@@ -1,73 +1,114 @@
 <!DOCTYPE html>
 <html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="stylesheet" href="./styles/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Libre+Franklin:ital,wght@0,100..900;1,100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=STIX+Two+Text:ital,wght@0,400..700;1,400..700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="./styles/style.css">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=STIX+Two+Text:ital,wght@0,400..700;1,400..700&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap"
-    rel="stylesheet">
-</head>
-
-<body>
-  <header class="header">
-    <div class="header_title_wrapper">
-      <h1 class="header_title"><span class="header_title_count"></span> <span class="header_title_case"></span>
-        21&nbsp;века</h1>
-    </div>
-    <div class="header_videos_wrapper">
-      <div class="header_videos"></div>
-    </div>
-  </header>
-  <main class="main">
-    <div class="all_movies"></div>
-    <div class="watchlist" id="watchlist">
-      <div class="have_watched_container" id="have_watched_container">
-        <div class="watchlist_wrapper">
-          <p class="watchlist_title">Я еще не смотрел ни один из этих фильмов...</p>
-        </div>
-        <button disabled>Copy link</button>
-        <div class="watchlist_movie_list"></div>
+  <body>
+    <header class="header">
+      <div class="header_title_wrapper">
+        <h1 class="header_title">
+          <span class="header_title_count"></span>
+          <span class="header_title_case"></span> 21&nbsp;века
+        </h1>
       </div>
-      <div class="want_to_watch_container" id="want_to_watch_container">
-        <div class="watchlist_wrapper">
-          <p class="watchlist_title">...но я уверен, что здесь есть кое-что и для меня.</p>
-        </div>
-        <button disabled>Copy link</button>
-        <div class="watchlist_movie_list"></div>
+      <div class="header_videos_wrapper">
+        <div class="header_videos"></div>
       </div>
-    </div>
-  </main>
-  <template id="movie-template">
-    <div class="movie_item">
-      <div class="movie_header">
-        <div class="movie_video_wrapper">
-          <video class="movie_video" src="" poster="" loop muted playsinline="true">
-        </div>
-        <h3 class="movie_place"></h3>
-        <h2 class="movie_name"></h2>
-        <p class="movie_director_and_year"></p>
-      </div>
-      <p class="movie_opinion"></p>
-      <div class="movie_quotes"></div>
-      <div class="saving_box">
-        <img class="saving_poster" src="" alt="" />
-        <div class="checkboxes_box">
-          <label class="checkbox_label">
-            <input type="checkbox" name="already-seen">
-            <span>Я видел это</span>
-          </label>
-          <label class="checkbox_label">
-            <input type="checkbox" name="want-to-watch">
-            <span>Я хочу посмотреть это</span>
-          </label>
+    </header>
+    <main class="main">
+      <h2 class="main_text">
+        Прошло уже четверть века, и&nbsp;на&nbsp;экраны вышли тысячи фильмов.
+        Как главный кинокритик современности, я&nbsp;решил составить рейтинг
+        лучших фильмов, вышедших на&nbsp;экраны с&nbsp;1&nbsp;января
+        2000&nbsp;года, которые за&nbsp;этот период действительно выдержали
+        испытание временем. Ключевым фактором, конечно&nbsp;же,
+        является&nbsp;то, что это либо мои самые любимые фильмы, либо фильмы,
+        которые я&nbsp;не&nbsp;раз пересматривал и&nbsp;могу включить снова
+        в&nbsp;любой момент. Я&nbsp;уверен, что почти все не&nbsp;согласятся
+        с&nbsp;моим выбором, но&nbsp;я&nbsp;также уверен, что вы&nbsp;сообщите
+        мне об&nbsp;этом.
+      </h2>
+      <div class="navigation">
+        <div class="navigation_wrapper">
+          <div class="navigation_places"></div>
+          <div class="navigation_watchlist">
+            <a class="navigation_link" href="#watchlist">
+              <div>
+                <p>Я видел<span class="num"></span></p>
+                <p>Я хочу посмотреть<span class="num"></span></p>
+              </div>
+            </a>
+          </div>
         </div>
       </div>
-    </div>
-  </template>
+      <div class="all_movies"></div>
+      <div class="watchlist" id="watchlist">
+        <div class="watchlist_container">
+          <div class="watchlist_wrapper"></div>
+          <div class="watchlist_button_wrapper">
+            <button class="copy-button" disabled>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="inherit"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M10.575 13.124c.442.353.498.99.123 1.415a1.008 1.008 0 0 1-1.414.123 5.003 5.003 0 0 1-.616-7.043l3.218-3.835a5.004 5.004 0 0 1 7.043-.616 5.004 5.004 0 0 1 .616 7.043l-1.354 1.614a6.908 6.908 0 0 0-.61-2.376l.427-.519a2.982 2.982 0 0 0-.37-4.224 2.982 2.982 0 0 0-4.224.37L10.205 8.9a2.982 2.982 0 0 0 .37 4.224Zm2.44-4.47a1.008 1.008 0 0 1 1.414-.123 5.003 5.003 0 0 1 .616 7.043l-3.218 3.835a5.003 5.003 0 0 1-7.043.616 5.003 5.003 0 0 1-.616-7.043l1.354-1.614c.062.817.263 1.623.61 2.386l-.426.509a2.982 2.982 0 0 0 .369 4.224 2.982 2.982 0 0 0 4.224-.37l3.209-3.824a2.982 2.982 0 0 0-.37-4.224.973.973 0 0 1-.123-1.415Z"
+                />
+              </svg>
+            </button>
+          </div>
+          <div class="watchlist_movie_list"></div>
+        </div>
+      </div>
+    </main>
+    <template id="movie-template">
+      <div class="movie_item">
+        <div class="movie_header">
+          <div class="movie_video_wrapper">
+            <video
+              class="movie_video"
+              src=""
+              poster=""
+              loop
+              muted
+              playsinline="true"
+            ></video>
+            <h3 class="movie_place"></h3>
+          </div>
+          <div class="movie_header_text">
+            <h2 class="movie_name"></h2>
+            <p class="movie_director_and_year"></p>
+          </div>
+        </div>
+        <div class="movie_text">
+          <p class="movie_opinion"></p>
+          <div class="movie_quotes"></div>
+          <div class="saving_box">
+            <img class="saving_poster" src="" alt="" />
+            <div class="checkboxes_box">
+              <label class="checkbox_label">
+                <input type="checkbox" name="already-seen" />
+                <span>Я видел это</span>
+              </label>
+              <label class="checkbox_label">
+                <input type="checkbox" name="want-to-watch" />
+                <span>Я хочу посмотреть это</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
 
-  <script src="./scripts/script.js"></script>
-</body>
-
+    <script src="./scripts/script.js"></script>
+  </body>
 </html>

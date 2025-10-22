@@ -382,6 +382,11 @@ const films = {
   },
 };
 
+const emptyMessages = {
+  have_watched: "Я ещё не смотрел ни один из этих фильмов...",
+  want_to_watch: "...но я уверен, что здесь есть кое‑что и для меня.",
+};
+const basicLink = "https://jeromesolomonmalone.github.io/best-movies/";
 const VideoUtils = {
   cleanName(str) {
     return str
@@ -391,9 +396,7 @@ const VideoUtils = {
   },
 
   getPoster(original) {
-    return `https://jeromesolomonmalone.github.io/best-movies/video/poster/${this.cleanName(
-      original
-    )}.jpg`;
+    return `${basicLink}video/poster/${this.cleanName(original)}.jpg`;
   },
 };
 
@@ -437,7 +440,7 @@ function renderHeader() {
     // video.autoplay =
 
     video.poster = VideoUtils.getPoster(film.original);
-    video.src = `https://jeromesolomonmalone.github.io/best-movies/video/mobile/${cleaned}.mp4`;
+    video.src = `${basicLink}video/mobile/${cleaned}.mp4`;
 
     block.appendChild(document.createElement("div")).className =
       "header_video_wrapper";
@@ -449,13 +452,11 @@ function initHeaderScroll() {
   const header = document.querySelector(".header");
   const blocks = document.querySelectorAll(".header_video_block");
 
-  if (!header || blocks.length !== 12) return;
-
   const h = parseFloat(getComputedStyle(header).height);
   const s = header.offsetTop;
   const e = s + h;
+  const eFast = e - h / 3;
 
-  // Позиции: [startX, startY, endX, endY] для каждого блока
   const pos = [
     ["-200%", "-200%", "-200%", "0%"], // 1
     ["-100%", "-200%", "-200%", "-200%"], // 2
@@ -482,250 +483,290 @@ function initHeaderScroll() {
 
   function scroll() {
     const y = window.scrollY;
-    t = y <= s ? 0 : y >= e ? 1 : (y - s) / h;
+    if (y <= s) t = 0;
+    else if (y >= eFast) t = 1;
+    else t = (y - s) / (eFast - s);
     update();
   }
 
-  update(); // Инициализация
+  update();
   window.addEventListener("scroll", scroll, { passive: true });
 }
 
-let sortedFilms = [];
-const seenSet = new Set();
-const wantSet = new Set();
-
 document.addEventListener("DOMContentLoaded", () => {
+  const storedTheme = localStorage.getItem("theme");
+  if (storedTheme === "dark") {
+    document.body.classList.add("dark-theme");
+  }
+
+  const seenSet = new Set(
+    JSON.parse(localStorage.getItem("movieWatchlist"))?.seen || []
+  );
+  const wantSet = new Set(
+    JSON.parse(localStorage.getItem("movieWatchlist"))?.want || []
+  );
+  const sortedFilms = Object.values(films)
+    .sort((a, b) => a.place - b.place)
+    .reverse();
+  let isDesktop = window.innerWidth > 500;
+
+  function createWatchlistContainers() {
+    const template = document.querySelector(".watchlist_container");
+    if (!template)
+      return console.error("Шаблон .watchlist_container не найден");
+
+    [
+      ["have_watched_container", "have_watched_container"],
+      ["want_to_watch_container", "want_to_watch_container"],
+    ].forEach(([id, cls]) => {
+      const clone = template.cloneNode(true);
+      clone.id = id;
+      clone.classList.add(cls);
+      updateButtonTitle(clone.querySelector("button"));
+      document.body.append(clone);
+    });
+
+    template.remove();
+  }
+  function updateButtonTitle(button) {
+    button[button.disabled ? "removeAttribute" : "setAttribute"](
+      "title",
+      "Скопировать ссылку в буфер обмена"
+    );
+  }
+
   renderHeader();
   initHeaderScroll();
-
-  const savedState = JSON.parse(localStorage.getItem("movieWatchlist")) || {
-    seen: [],
-    want: [],
-  };
-  savedState.seen.forEach((place) => seenSet.add(place));
-  savedState.want.forEach((place) => wantSet.add(place));
-
-  // Сортировка фильмов
-  sortedFilms = Object.values(films).sort((a, b) => a.place - b.place);
-
-  // Рендеринг фильмов
+  updateNavigationPlaces();
   renderMovies();
-  // Обновление списков просмотра
+  createWatchlistContainers();
   updateWatchlist();
+  updateWatchlistCounts();
 
-  let isDesktop = window.innerWidth > 500;
-  // Перерисовка видео при изменении размера экрана
   window.addEventListener("resize", () => {
-    // Если режим не изменился — ничего не делаем
     if (window.innerWidth > 500 === isDesktop) return;
-
-    // Обновляем флаг
     isDesktop = window.innerWidth > 500;
-
-    // Переключаем src у всех видео
     document.querySelectorAll(".movie_video").forEach((video) => {
-      const place = parseInt(
-        video.closest(".movie_item").id.replace("movie-", "")
-      );
+      const place = +video.closest(".movie_item").id.replace("movie-", "");
       const film = sortedFilms.find((f) => f.place === place);
       const cleaned = VideoUtils.cleanName(film.original);
-      video.src = `https://jeromesolomonmalone.github.io/best-movies/video/${
+      video.src = `${basicLink}video/${
         isDesktop ? "desktop/" : "mobile/"
       }${cleaned}.mp4`;
     });
   });
-});
 
-function renderMovies() {
-  const allMovies = document.querySelector(".all_movies");
-  allMovies.innerHTML = "";
+  function updateNavigationPlaces() {
+    const container = document.querySelector(".navigation_places");
+    let html = "";
 
-  sortedFilms.forEach((film) => {
-    const template = document.getElementById("movie-template");
-    const clone = document.importNode(template.content, true);
-    const root = clone.firstElementChild;
-    root.id = `movie-${film.place}`;
+    for (let i = Math.floor(sortedFilms.length / 5) * 5; i >= 5; i -= 5) {
+      html += `<a href="#movie-${i}">${i}</a>`;
+    }
 
-    // Видео
-    const video = root.querySelector(".movie_video");
-    const cleaned = VideoUtils.cleanName(film.original);
-    video.src = `https://jeromesolomonmalone.github.io/best-movies/video/${
-      window.innerWidth > 500 ? "desktop/" : "mobile/"
-    }${cleaned}.mp4`;
-    video.poster = VideoUtils.getPoster(film.original);
+    container.innerHTML = html;
+  }
 
-    video.load(); // Явное обновление видео
+  function updateWatchlistCounts() {
+    const haveNum = document.querySelector(
+      ".navigation_watchlist p:first-child .num"
+    );
+    const wantNum = document.querySelector(
+      ".navigation_watchlist p:nth-child(2) .num"
+    );
 
-    // Текст
-    root.querySelector(".movie_place").textContent = film.place;
-    root.querySelector(".movie_name").textContent = film.title;
-    root.querySelector(
-      ".movie_director_and_year"
-    ).textContent = `${film.director}, ${film.year}`;
-    root.querySelector(".movie_opinion").textContent = film.opinion;
+    if (!haveNum || !wantNum) return;
 
-    // Цитаты
-    const quotesContainer = root.querySelector(".movie_quotes");
-    if (film.quote && film.quote.length) {
-      film.quote.forEach((q) => {
-        const quoteDiv = document.createElement("div");
-        quoteDiv.className = "movie_quote";
-        quoteDiv.innerHTML = `<p>${q.quote}</p><p>${q.who}</p>`;
-        quotesContainer.appendChild(quoteDiv);
+    const tasks = [
+      { elem: haveNum, value: seenSet.size },
+      { elem: wantNum, value: wantSet.size },
+    ];
+
+    tasks.forEach(({ elem, value }) => {
+      if (elem.textContent !== String(value)) {
+        elem.classList.add("fade-out");
+        setTimeout(() => {
+          elem.textContent = value;
+          elem.classList.remove("fade-out");
+        }, 200);
+      }
+    });
+  }
+
+  function renderMovies() {
+    const container = document.querySelector(".all_movies");
+    container.innerHTML = "";
+
+    function createMovieItem(film) {
+      const template = document.getElementById("movie-template").content;
+      const clone = document.importNode(template, true);
+      const item = clone.querySelector(".movie_item");
+      item.id = `movie-${film.place}`;
+
+      const video = clone.querySelector(".movie_video");
+      const cleaned = VideoUtils.cleanName(film.original);
+      video.src = `${basicLink}video/${
+        isDesktop ? "desktop/" : "mobile/"
+      }${cleaned}.mp4`;
+      video.poster = VideoUtils.getPoster(film.original);
+
+      clone.querySelector(".movie_place").textContent = film.place;
+      clone.querySelector(".movie_name").textContent = film.title;
+      clone.querySelector(
+        ".movie_director_and_year"
+      ).textContent = `${film.director}, ${film.year}`;
+      clone.querySelector(".movie_opinion").textContent = film.opinion;
+
+      const quotesContainer = clone.querySelector(".movie_quotes");
+      quotesContainer.innerHTML = (film.quote || [])
+        .map(
+          (q) => `
+      <div class="movie_quote">
+        <p>“${q.quote}”</p>
+        <p>${q.who}</p>
+      </div>
+    `
+        )
+        .join("");
+
+      const poster = clone.querySelector(".saving_poster");
+      poster.src = VideoUtils.getPoster(film.original);
+      poster.alt = film.title;
+
+      const seenCheckbox = clone.querySelector('input[name="already-seen"]');
+      const wantCheckbox = clone.querySelector('input[name="want-to-watch"]');
+
+      seenCheckbox.checked = seenSet.has(film.place);
+      wantCheckbox.checked = wantSet.has(film.place);
+
+      seenCheckbox.onchange = () =>
+        toggleMovie(film.place, "seen", seenCheckbox.checked);
+      wantCheckbox.onchange = () =>
+        toggleMovie(film.place, "want", wantCheckbox.checked);
+
+      return clone;
+    }
+
+    sortedFilms.forEach((film) => {
+      const item = createMovieItem(film);
+      container.appendChild(item);
+    });
+  }
+
+  function toggleMovie(place, type, checked) {
+    const item = document.getElementById(`movie-${place}`);
+    const seenCheck = item.querySelector('input[name="already-seen"]');
+    const wantCheck = item.querySelector('input[name="want-to-watch"]');
+
+    if (type === "seen" && checked) {
+      wantSet.delete(place);
+      wantCheck.checked = false;
+    }
+    if (type === "want" && checked) {
+      seenSet.delete(place);
+      seenCheck.checked = false;
+    }
+
+    checked
+      ? type === "seen"
+        ? seenSet.add(place)
+        : wantSet.add(place)
+      : type === "seen"
+      ? seenSet.delete(place)
+      : wantSet.delete(place);
+
+    updateWatchlist();
+    updateWatchlistCounts();
+    localStorage.setItem(
+      "movieWatchlist",
+      JSON.stringify({ seen: [...seenSet], want: [...wantSet] })
+    );
+  }
+
+  function updateWatchlist() {
+    updateContainer("have_watched_container", seenSet, "Я видел");
+    updateContainer("want_to_watch_container", wantSet, "Я хочу посмотреть");
+  }
+
+  function updateContainer(id, set, title) {
+    const container = document.getElementById(id);
+    const wrapper = container.querySelector(".watchlist_wrapper");
+    const button = container.querySelector("button");
+    const list = container.querySelector(".watchlist_movie_list");
+
+    // Определяем, какой текст показывать для пустого списка
+    const emptyText =
+      id === "have_watched_container"
+        ? emptyMessages.have_watched
+        : emptyMessages.want_to_watch;
+
+    if (!set.size) {
+      wrapper.innerHTML = `<p class="watchlist_title">${emptyText}</p>`;
+      list.innerHTML = "";
+      button.disabled = true;
+      updateButtonTitle(button);
+      return;
+    }
+
+    wrapper.innerHTML = `<p class="watchlist_title">${title} (${set.size})</p><div class="watchlist_posters"></div>`;
+    const posters = wrapper.querySelector(".watchlist_posters");
+    posters.innerHTML = [...set]
+      .map((place) => {
+        const film = sortedFilms.find((f) => f.place === place);
+        return `<img src="${VideoUtils.getPoster(film.original)}" alt="${
+          film.title
+        }" style="margin:0 5px;max-height:50px">`;
+      })
+      .join("");
+
+    list.innerHTML = [...set]
+      .map(
+        (place) =>
+          `<a href="#movie-${place}">${
+            sortedFilms.find((f) => f.place === place).title
+          }</a>`
+      )
+      .join(" ● ");
+    button.disabled = false;
+    updateButtonTitle(button);
+    button.onclick = () => {
+      const container = button.closest(
+        ".watchlist_button_wrapper"
+      )?.parentElement;
+      const url = `${basicLink}#${container.id}`;
+
+      const notification = Object.assign(document.createElement("span"), {
+        className: "copy-notification",
+        textContent: "Ссылка скопирована",
       });
-    }
 
-    // Постеры для сохранения
-    const posterImg = root.querySelector(".saving_poster");
-    posterImg.src = video.poster;
-    posterImg.alt = film.title;
+      button.parentElement.appendChild(notification);
 
-    // Чекбоксы
-    const seenCheck = root.querySelector('input[name="already-seen"]');
-    const wantCheck = root.querySelector('input[name="want-to-watch"]');
+      requestAnimationFrame(() => notification.classList.add("show"));
 
-    seenCheck.checked = seenSet.has(film.place);
-    wantCheck.checked = wantSet.has(film.place);
-
-    seenCheck.onchange = () =>
-      toggleMovie(film.place, "seen", seenCheck.checked);
-    wantCheck.onchange = () =>
-      toggleMovie(film.place, "want", wantCheck.checked);
-
-    allMovies.appendChild(root);
-  });
-}
-
-// Переключение состояния фильма
-function toggleMovie(place, type, checked) {
-  if (type === "seen") {
-    if (checked) {
-      wantSet.delete(place); // Снятие второго чекбокса
-      document.querySelector(
-        `#movie-${place} input[name="want-to-watch"]`
-      ).checked = false;
-    }
-    checked ? seenSet.add(place) : seenSet.delete(place);
-  } else {
-    if (checked) {
-      seenSet.delete(place); // Снятие первого чекбокса
-      document.querySelector(
-        `#movie-${place} input[name="already-seen"]`
-      ).checked = false;
-    }
-    checked ? wantSet.add(place) : wantSet.delete(place);
-  }
-
-  updateWatchlist();
-  saveState();
-}
-
-// Обновление списков просмотра
-function updateWatchlist() {
-  updateContainer(
-    document.getElementById("have_watched_container"),
-    seenSet,
-    "Я видел",
-    "Я еще не смотрел ни один из этих фильмов..."
-  );
-  updateContainer(
-    document.getElementById("want_to_watch_container"),
-    wantSet,
-    "Я хочу посмотреть",
-    "...но я уверен, что здесь есть кое-что и для меня."
-  );
-}
-
-// Динамическое обновление контейнера
-function updateContainer(container, set, title, emptyText) {
-  // Защита от null/undefined container
-  if (!container) {
-    console.error(`Контейнер не найден для обновления: ${title}`);
-    return;
-  }
-
-  const wrapper = container.querySelector(".watchlist_wrapper");
-  const button = container.querySelector("button");
-  const list = container.querySelector(".watchlist_movie_list");
-
-  // Если какой-то ключевой элемент отсутствует
-  if (!wrapper || !button || !list) {
-    console.error("В контейнере отсутствуют обязательные элементы:", container);
-    return;
-  }
-
-  // Логика обновления (остаётся без изменений)
-  if (set.size === 0) {
-    wrapper.innerHTML = `<p class="watchlist_title">${emptyText}</p>`;
-    list.innerHTML = "";
-    button.disabled = true;
-    return;
-  }
-
-  wrapper.innerHTML = `
-    <p class="watchlist_title">${title} (${set.size})</p>
-    <div class="watchlist_posters"></div>
-  `;
-
-  const posters = wrapper.querySelector(".watchlist_posters");
-  posters.innerHTML = Array.from(set)
-    .map((place) => {
-      const film = sortedFilms.find((f) => f.place === place);
-      return `<img src="${VideoUtils.getPoster(film.original)}" alt="${
-        film.title
-      }" style="margin: 0 5px; max-height: 50px;">`;
-    })
-    .join("");
-
-  list.innerHTML = Array.from(set)
-    .map(
-      (place) =>
-        `<a href="#movie-${place}">${
-          sortedFilms.find((f) => f.place === place).title
-        }</a>`
-    )
-    .join(" ● ");
-
-  button.disabled = false;
-  button.onclick = () => {
-    const anchor = title.toLowerCase().replace(/\s+/g, "-");
-    const url = `${window.location.origin}${window.location.pathname}#${anchor}`;
-
-    if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard
         .writeText(url)
-        .then(() => alert(`Ссылка на список "${title}" скопирована!\n\n${url}`))
-        .catch(() => fallbackCopy(url));
-    } else {
-      fallbackCopy(url);
-    }
-  };
-
-  function fallbackCopy(text) {
-    const textarea = document.createElement("textarea");
-    textarea.value = text;
-    textarea.style.cssText = "position:fixed;opacity:0;";
-    document.body.appendChild(textarea);
-    textarea.select();
-
-    try {
-      document.execCommand("copy")
-        ? alert(`Ссылка скопирована!\n\n${text}`)
-        : prompt("Скопируйте вручную:", text);
-    } catch (e) {
-      prompt("Скопируйте вручную:", text);
-    }
-    document.body.removeChild(textarea);
+        .then(() => {
+          setTimeout(() => {
+            notification.classList.remove("show");
+            setTimeout(() => notification.remove(), 200);
+          }, 3800);
+        })
+        .catch((err) => {
+          console.error("Копирование не удалось:", err);
+        });
+    };
   }
-}
 
-// Сохранение состояния в localStorage
-function saveState() {
-  localStorage.setItem(
-    "movieWatchlist",
-    JSON.stringify({
-      seen: [...seenSet],
-      want: [...wantSet],
-    })
-  );
-}
+  document.querySelector(".navigation") &&
+    (() => {
+      const nav = document.querySelector(".navigation");
+
+      const checkPos = () =>
+        nav.classList.toggle("open", nav.getBoundingClientRect().top <= 0);
+
+      checkPos();
+      window.addEventListener("scroll", checkPos);
+      window.addEventListener("resize", checkPos);
+    })();
+});
