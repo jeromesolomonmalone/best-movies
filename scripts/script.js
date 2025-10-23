@@ -383,8 +383,16 @@ const films = {
 };
 
 const emptyMessages = {
-  have_watched: "Я ещё не смотрел ни один из этих фильмов...",
-  want_to_watch: "...но я уверен, что здесь есть кое‑что и для меня.",
+  have_watched: {
+    first: "Я пока не смотрел ни один из этих фильмов…",
+    second:
+      "Если вы посмотрели фильм из списка, обязательно установите флажок под его записью, и здесь появится итоговое количество просмотров. (Я сохраню ваш прогресс)",
+  },
+  want_to_watch: {
+    first: "…но я уверен, что что-то из этого мне подойдёт.",
+    second:
+      "Следите за фильмами, которые вы хотите посмотреть, установив флажки под их записями.",
+  },
 };
 const basicLink = "https://jeromesolomonmalone.github.io/best-movies/";
 const VideoUtils = {
@@ -397,6 +405,10 @@ const VideoUtils = {
 
   getPoster(original) {
     return `${basicLink}video/poster/${this.cleanName(original)}.jpg`;
+  },
+
+  getCover(original) {
+    return `${basicLink}images/posters/${this.cleanName(original)}.jpg`;
   },
 };
 
@@ -512,8 +524,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function createWatchlistContainers() {
     const template = document.querySelector(".watchlist_container");
-    if (!template)
-      return console.error("Шаблон .watchlist_container не найден");
 
     [
       ["have_watched_container", "have_watched_container"],
@@ -522,17 +532,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const clone = template.cloneNode(true);
       clone.id = id;
       clone.classList.add(cls);
-      updateButtonTitle(clone.querySelector("button"));
-      document.body.append(clone);
+      document.querySelector(".watchlist_containers").append(clone);
     });
 
     template.remove();
-  }
-  function updateButtonTitle(button) {
-    button[button.disabled ? "removeAttribute" : "setAttribute"](
-      "title",
-      "Скопировать ссылку в буфер обмена"
-    );
   }
 
   renderHeader();
@@ -616,21 +619,29 @@ document.addEventListener("DOMContentLoaded", () => {
         ".movie_director_and_year"
       ).textContent = `${film.director}, ${film.year}`;
       clone.querySelector(".movie_opinion").textContent = film.opinion;
+      clone.querySelector(
+        ".movie_link"
+      ).textContent = `“${film.title}” на Кинопоиске`;
+      clone.querySelector(".movie_link").href = film.link;
 
       const quotesContainer = clone.querySelector(".movie_quotes");
-      quotesContainer.innerHTML = (film.quote || [])
-        .map(
-          (q) => `
-      <div class="movie_quote">
-        <p>“${q.quote}”</p>
-        <p>${q.who}</p>
-      </div>
-    `
-        )
-        .join("");
+      if (film.quote && film.quote.length > 0) {
+        quotesContainer.innerHTML = film.quote
+          .map(
+            (q) => `
+            <div class="movie_quote">
+                <p>“${q.quote}”</p>
+                <p>${q.who}</p>
+            </div>
+        `
+          )
+          .join("");
+      } else {
+        quotesContainer.remove();
+      }
 
       const poster = clone.querySelector(".saving_poster");
-      poster.src = VideoUtils.getPoster(film.original);
+      poster.src = VideoUtils.getCover(film.original);
       poster.alt = film.title;
 
       const seenCheckbox = clone.querySelector('input[name="already-seen"]');
@@ -688,75 +699,144 @@ document.addEventListener("DOMContentLoaded", () => {
     updateContainer("want_to_watch_container", wantSet, "Я хочу посмотреть");
   }
 
+  function calculateDimensions(size, screenWidth) {
+    let baseWidth = 160;
+
+    if (size >= 91) baseWidth = 29;
+    else if (size >= 74) baseWidth = 32;
+    else if (size >= 58) baseWidth = 36;
+    else if (size >= 37) baseWidth = 40;
+    else if (size >= 31) baseWidth = 50;
+    else if (size >= 26) baseWidth = 56;
+    else if (size >= 21) baseWidth = 60;
+    else if (size >= 17) baseWidth = 64;
+    else if (size >= 13) baseWidth = 80;
+    else if (size >= 10) baseWidth = 84;
+    else if (size >= 7) baseWidth = 100;
+    else if (size >= 5) baseWidth = 110;
+    else if (size >= 3) baseWidth = 150;
+
+    const reduction = screenWidth < 415 ? (415 - screenWidth) * 0.00241 : 0;
+
+    return {
+      imgWidth: baseWidth * (1 - reduction),
+      scale: 1 - reduction,
+    };
+  }
+
   function updateContainer(id, set, title) {
     const container = document.getElementById(id);
     const wrapper = container.querySelector(".watchlist_wrapper");
-    const button = container.querySelector("button");
+    const button = container.querySelector(".copy-button");
     const list = container.querySelector(".watchlist_movie_list");
-
-    // Определяем, какой текст показывать для пустого списка
-    const emptyText =
-      id === "have_watched_container"
-        ? emptyMessages.have_watched
-        : emptyMessages.want_to_watch;
+    const screenWidth = window.innerWidth;
+    const { imgWidth, scale } = calculateDimensions(set.size, screenWidth);
+    const headerTitle = document.querySelector(".header_title").innerText;
 
     if (!set.size) {
-      wrapper.innerHTML = `<p class="watchlist_title">${emptyText}</p>`;
+      const message =
+        emptyMessages[
+          id === "have_watched_container" ? "have_watched" : "want_to_watch"
+        ];
+      wrapper.innerHTML = `
+            <p class="watchlist_title">${message.first}</p>
+            <p class="watchlist_ps">${message.second}</p>
+        `;
       list.innerHTML = "";
       button.disabled = true;
-      updateButtonTitle(button);
       return;
     }
 
-    wrapper.innerHTML = `<p class="watchlist_title">${title} (${set.size})</p><div class="watchlist_posters"></div>`;
-    const posters = wrapper.querySelector(".watchlist_posters");
-    posters.innerHTML = [...set]
-      .map((place) => {
-        const film = sortedFilms.find((f) => f.place === place);
-        return `<img src="${VideoUtils.getPoster(film.original)}" alt="${
-          film.title
-        }" style="margin:0 5px;max-height:50px">`;
-      })
-      .join("");
+    const totalFilms = sortedFilms.length;
+    const newTitle =
+      set.size === totalFilms
+        ? id === "have_watched_container"
+          ? "Я видел все"
+          : "Я хочу посмотреть все"
+        : title;
+
+    wrapper.innerHTML = `
+        <h4 class="watchlist_subtitle">${headerTitle}</h4>
+        <p class="watchlist_title">${newTitle} ${set.size}</p>
+        <div class="watchlist_posters"></div>
+    `;
+    const posters = container.querySelector(".watchlist_posters");
+
+    if (posters) {
+      posters.style.setProperty("--img-width", `${imgWidth}px`);
+      wrapper.style.transform = `scale(${scale})`;
+
+      posters.innerHTML = [...set]
+        .map((place) => {
+          const film = sortedFilms.find((f) => f.place === place);
+          return `<img src="${VideoUtils.getCover(film.original)}" alt="${
+            film.title
+          }">`;
+        })
+        .join("");
+    }
 
     list.innerHTML = [...set]
-      .map(
-        (place) =>
-          `<a href="#movie-${place}">${
-            sortedFilms.find((f) => f.place === place).title
-          }</a>`
-      )
+      .map((place) => {
+        const film = sortedFilms.find((f) => f.place === place);
+        return `<a href="#movie-${place}">${film.title}</a>`;
+      })
       .join(" ● ");
+
     button.disabled = false;
-    updateButtonTitle(button);
-    button.onclick = () => {
-      const container = button.closest(
-        ".watchlist_button_wrapper"
-      )?.parentElement;
-      const url = `${basicLink}#${container.id}`;
+    button.textContent = "Скачать";
+    button.onclick = async () => {
+      if (button.disabled) return;
 
-      const notification = Object.assign(document.createElement("span"), {
-        className: "copy-notification",
-        textContent: "Ссылка скопирована",
-      });
+      try {
+        button.textContent = "Загрузка...";
+        button.disabled = true;
 
-      button.parentElement.appendChild(notification);
-
-      requestAnimationFrame(() => notification.classList.add("show"));
-
-      navigator.clipboard
-        .writeText(url)
-        .then(() => {
-          setTimeout(() => {
-            notification.classList.remove("show");
-            setTimeout(() => notification.remove(), 200);
-          }, 3800);
-        })
-        .catch((err) => {
-          console.error("Копирование не удалось:", err);
+        const canvas = await html2canvas(wrapper, {
+          logging: false,
+          useCORS: true,
+          scrollY: -window.scrollY,
         });
+
+        const link = document.createElement("a");
+        link.download = "watchlist.jpg";
+        link.href = canvas.toDataURL("image/jpeg", 1.0);
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        button.textContent = "Скачать";
+        button.disabled = false;
+      } catch (error) {
+        button.textContent = "Скачать";
+        button.disabled = false;
+        alert("Произошла ошибка при создании скриншота");
+      }
     };
   }
+
+  window.addEventListener("resize", () => {
+    const screenWidth = window.innerWidth;
+
+    ["have_watched_container", "want_to_watch_container"].forEach((id) => {
+      const container = document.getElementById(id);
+      if (!container) return;
+
+      const wrapper = container.querySelector(".watchlist_wrapper");
+      const posters = container.querySelector(".watchlist_posters");
+      const set = id === "have_watched_container" ? seenSet : wantSet;
+      const size = set.size;
+
+      const { imgWidth, scale } = calculateDimensions(size, screenWidth);
+
+      if (posters) {
+        posters.style.setProperty("--img-width", `${imgWidth}px`);
+      }
+
+      wrapper.style.transform = `scale(${scale})`;
+    });
+  });
 
   document.querySelector(".navigation") &&
     (() => {

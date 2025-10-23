@@ -11,20 +11,12 @@
   --color-secondary: #999;
   --border: #e5e5e5;
   --border-navigation: #ccc;
+  --button-border: #dfdfdf;
+  --button-background: #ebebeb;
+  --link-underline: inherit;
+  --link-color: #326891;
+  --link-border: rgba(50, 104, 145, 0.25);
   --width-body: 600px;
-}
-
-@media (prefers-color-scheme: dark), .dark-theme {
-  :root {
-    --background: #121212;
-    --background-reverse: #fff;
-    --saving-background: #272728;
-    --main-color: #f8f8f8;
-    --body-color: #fff;
-    --color-secondary: #9c9c9c;
-    --border: #dfdfdf;
-    --border-navigation: rgb(255 255 255 / 24%);
-  }
 }
 
 *,
@@ -60,6 +52,7 @@ video {
 }
 
 body {
+  position: relative;
   margin: 0;
   padding: 0;
   color: var(--main-color);
@@ -317,7 +310,7 @@ body {
 }
 
 .movie_quote p:first-child {
-  font-weight: 300;
+  font-weight: 350;
   font-size: 22px;
   font-style: italic;
   line-height: 1.25;
@@ -331,6 +324,20 @@ body {
   line-height: 1.25;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+}
+
+.movie_link {
+  border-block-end: 1px solid var(--link-border);
+  color: var(--link-color);
+  font-family: var(--franklin);
+  font-size: 15px;
+  line-height: 22px;
+  transition: border 0.3s ease-out;
+  inline-size: fit-content;
+}
+
+.movie_link:hover {
+  border-color: var(--link-color);
 }
 
 .saving_box {
@@ -353,57 +360,206 @@ body {
   gap: 20px;
 }
 
-.checkbox_label .checkbox {
+.checkboxes_box input {
   position: relative;
-  width: 16px;
-  height: 16px;
-  margin-top: -8px;
+  margin: -8px 0 0;
+  border: none;
+  padding: 0;
   outline: none;
+  inline-size: 16px;
+  min-inline-size: 16px;
+  block-size: 16px;
+  min-block-size: 16px;
 }
 
-.checkbox_label .checkbox::before {
+.checkboxes_box input::before {
   content: "";
   position: absolute;
   display: block;
-  width: 16px;
-  height: 16px;
-  border: 1px solid red;
+  border: 1px solid var(--background-reverse);
   border-radius: 3px;
-  background-color: green;
+  background-color: var(--saving-background);
   pointer-events: none;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.checkboxes_box input:checked::before {
+  background-color: var(--background-reverse);
+}
+
+.checkboxes_box input:checked::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border: 3px solid var(--background);
+  border-top: none;
+  border-right: none;
+  transform: translate(-50%, -80%) rotate(-45deg);
+  inline-size: 11px;
+  min-inline-size: 11px;
+  aspect-ratio: 41.5/25;
 }
 
 .checkbox_label span {
   padding-left: 5px;
+  color: var(--body-color);
   font-weight: 700;
   font-size: 23px;
   cursor: pointer;
 }
 
-.copy-button svg {
-  fill: black;
-  inline-size: 50px;
-  block-size: 50px;
+.watchlist {
+  margin-block-end: 50px;
+  padding: 60px 0;
+  background-color: var(--saving-background);
 }
 
-.copy-notification {
-  display: inline-block;
-  margin-top: 8px;
-  border-radius: 4px;
-  padding: 6px 12px;
-  opacity: 0;
-  color: white;
-  font-size: 0.875rem;
-  background-color: #4caf50;
-  transition: opacity 0.2s ease;
-  pointer-events: none; /* Не мешает кликам */
+.watchlist_header_title {
+  margin: 20px auto 5px;
+  color: var(--body-color);
+  font-weight: 700;
+  font-size: 23px;
+  line-height: 1.25;
+  text-align: center;
+  max-inline-size: calc(100% - 40px);
 }
 
-.copy-notification.show {
-  opacity: 1;
+.watchlist_header_subtitle {
+  margin: 0 auto 26px;
+  color: var(--body-color);
+  font-family: var(--imperial);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 1.3;
+  text-align: center;
+  max-inline-size: calc(100% - 40px);
+  inline-size: 420px;
 }
 
-@media screen and (max-width: 1010px) {
+.watchlist_containers {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 auto;
+  max-inline-size: 900px;
+}
+
+.watchlist_container {
+  inline-size: 50%;
+}
+
+.watchlist_wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+  max-inline-size: 415px;
+  inline-size: 415px;
+  aspect-ratio: 9 / 16;
+}
+
+.have_watched_container .watchlist_wrapper {
+  background-color: #ffd645;
+}
+
+.want_to_watch_container .watchlist_wrapper {
+  background-color: #73d7a0;
+}
+
+.watchlist_subtitle {
+  margin: 40px 0 10px;
+  font-family: var(--franklin);
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.watchlist_title {
+  margin-block-end: 15px;
+  font-weight: 400;
+  font-size: 38px;
+  line-height: 1;
+}
+
+.watchlist_ps {
+  max-width: calc(100% - 40px);
+  margin: 0 auto 15px;
+  font-family: var(--franklin);
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.watchlist_posters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  gap: 5px;
+  margin: 0 auto;
+  block-size: 72%;
+  min-block-size: 320px;
+  max-inline-size: 100%;
+  inline-size: 100%;
+}
+
+.watchlist_posters img {
+  border-radius: 3px;
+  object-fit: cover;
+  inline-size: var(--img-width);
+  aspect-ratio: 0.675;
+}
+
+.copy-button {
+  display: block;
+  width: fit-content;
+  margin: 20px auto 0;
+  border: 1px solid var(--button-border);
+  border-radius: 6px;
+  padding: 16px;
+  color: var(--background-reverse);
+  font-family: var(--franklin);
+  font-size: 16px;
+  background-color: transparent;
+  transition: background-color 0.25s;
+  cursor: pointer;
+}
+
+.copy-button:hover {
+  background-color: var(--button-background);
+}
+
+.copy-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.copy-button:disabled:hover {
+  background-color: transparent;
+}
+
+.watchlist_movie_list {
+  margin: 10px auto 30px;
+  color: var(--body-color);
+  font-family: var(--franklin);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.4;
+  text-align: center;
+  max-inline-size: calc(100% - 40px);
+}
+
+.watchlist_movie_list a:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--link-underline);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+@media screen and (max-width: 1024px) {
   .movie_video_wrapper {
     padding: 0;
   }
@@ -439,6 +595,36 @@ body {
     font-weight: 400;
     font-size: 18px;
     line-height: 1.222222222222222;
+  }
+
+  .watchlist {
+    padding: 40px 0;
+  }
+
+  .watchlist_header_title {
+    font-size: 21px;
+  }
+
+  .watchlist_header_subtitle {
+    font-size: 17px;
+  }
+
+  .watchlist_containers {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .watchlist_container {
+    inline-size: 100%;
+  }
+
+  .watchlist_title {
+    font-size: 34px;
+  }
+
+  .watchlist_movie_list {
+    font-size: 14px;
   }
 }
 
@@ -486,5 +672,53 @@ body {
 
   .saving_poster {
     inline-size: 72px;
+  }
+
+  .checkbox_label span {
+    font-size: 21px;
+  }
+
+  .watchlist_title {
+    font-size: 26px;
+  }
+}
+
+@media screen and (max-width: 460px) {
+  .checkbox_label span {
+    line-height: 1;
+  }
+
+  .watchlist_wrapper {
+    inline-size: 100%;
+  }
+}
+
+@media (prefers-color-scheme: dark), .dark-theme {
+  :root {
+    --background: #121212;
+    --background-reverse: #fff;
+    --saving-background: #272728;
+    --main-color: #f8f8f8;
+    --body-color: #fff;
+    --color-secondary: #9c9c9c;
+    --border: #dfdfdf;
+    --border-navigation: rgb(255 255 255 / 24%);
+    --button-border: #fff;
+    --button-background: rgb(255 255 255 / 24%);
+    --link-underline: #aaa;
+    --link-color: #f8f8f8;
+    --link-border: #f8f8f8;
+  }
+
+  .movie_quote p:first-child {
+    font-weight: 300;
+  }
+
+  .movie_link:hover {
+    border-color: transparent;
+  }
+
+  .watchlist_title {
+    font-weight: 300;
   }
 }

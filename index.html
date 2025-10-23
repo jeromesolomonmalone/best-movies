@@ -51,22 +51,20 @@
       </div>
       <div class="all_movies"></div>
       <div class="watchlist" id="watchlist">
-        <div class="watchlist_container">
-          <div class="watchlist_wrapper"></div>
-          <div class="watchlist_button_wrapper">
-            <button class="copy-button" disabled>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="inherit"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M10.575 13.124c.442.353.498.99.123 1.415a1.008 1.008 0 0 1-1.414.123 5.003 5.003 0 0 1-.616-7.043l3.218-3.835a5.004 5.004 0 0 1 7.043-.616 5.004 5.004 0 0 1 .616 7.043l-1.354 1.614a6.908 6.908 0 0 0-.61-2.376l.427-.519a2.982 2.982 0 0 0-.37-4.224 2.982 2.982 0 0 0-4.224.37L10.205 8.9a2.982 2.982 0 0 0 .37 4.224Zm2.44-4.47a1.008 1.008 0 0 1 1.414-.123 5.003 5.003 0 0 1 .616 7.043l-3.218 3.835a5.003 5.003 0 0 1-7.043.616 5.003 5.003 0 0 1-.616-7.043l1.354-1.614c.062.817.263 1.623.61 2.386l-.426.509a2.982 2.982 0 0 0 .369 4.224 2.982 2.982 0 0 0 4.224-.37l3.209-3.824a2.982 2.982 0 0 0-.37-4.224.973.973 0 0 1-.123-1.415Z"
-                />
-              </svg>
-            </button>
+        <h2 class="watchlist_header_title">
+          Поделитесь своими списками фильмов!
+        </h2>
+        <h3 class="watchlist_header_subtitle">
+          Скачайте свои списки фильмов, чтобы отслеживать, что вы&nbsp;уже
+          посмотрели и&nbsp;что хотите посмотреть. Или поделитесь ими
+          со&nbsp;своими друзьями!
+        </h3>
+        <div class="watchlist_containers">
+          <div class="watchlist_container">
+            <div class="watchlist_wrapper"></div>
+            <button class="copy-button" disabled>Скачать</button>
+            <div class="watchlist_movie_list"></div>
           </div>
-          <div class="watchlist_movie_list"></div>
         </div>
       </div>
     </main>
@@ -92,6 +90,7 @@
         <div class="movie_text">
           <p class="movie_opinion"></p>
           <div class="movie_quotes"></div>
+          <a class="movie_link" href="" target="_blank"></a>
           <div class="saving_box">
             <img class="saving_poster" src="" alt="" />
             <div class="checkboxes_box">
@@ -109,6 +108,7 @@
       </div>
     </template>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="./scripts/script.js"></script>
   </body>
 </html>
