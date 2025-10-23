@@ -919,10 +919,21 @@ document.addEventListener("DOMContentLoaded", () => {
             useCORS: true,
           });
 
-          const link = document.createElement("a");
-          link.href = canvas.toDataURL("image/jpeg", 1.0);
-          link.download = "watchlist.jpg";
-          link.click();
+          const imageData = canvas.toDataURL("image/jpeg", 1.0);
+          const blob = await fetch(imageData).then((r) => r.blob());
+
+          if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "watchlist.jpg";
+            a.click();
+            URL.revokeObjectURL(a.href);
+          } else {
+            const link = document.createElement("a");
+            link.href = imageData;
+            link.download = "watchlist.jpg";
+            link.click();
+          }
 
           document.body.removeChild(clone);
         } finally {
