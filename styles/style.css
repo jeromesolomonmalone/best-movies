@@ -7,7 +7,7 @@
   --background-reverse: #121212;
   --saving-background: #f2f2f2;
   --main-color: #333;
-  --body-color: #333;
+  --body-color: var(--main-color);
   --color-secondary: #999;
   --border: #e5e5e5;
   --border-navigation: #ccc;
@@ -17,6 +17,8 @@
   --link-color: #326891;
   --link-border: rgba(50, 104, 145, 0.25);
   --width-body: 600px;
+  --width-standart: calc(100% - 40px);
+  --hundredsvh: 100svh;
 }
 
 *,
@@ -62,7 +64,7 @@ body {
 }
 
 .header {
-  block-size: calc(100svh * 3);
+  block-size: calc(var(--hundredsvh) * 3);
   inline-size: 100%;
 }
 
@@ -70,11 +72,11 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-bottom: calc(100svh * -1);
+  margin-bottom: calc(var(--hundredsvh) * -1);
   margin-inline: auto;
   padding-inline: 10px;
   inline-size: 100%;
-  min-block-size: 100svh;
+  min-block-size: var(--hundredsvh);
   max-inline-size: var(--width-body);
 }
 
@@ -102,7 +104,7 @@ body {
   overflow: hidden;
   pointer-events: none;
   inline-size: 100%;
-  block-size: 100svh;
+  block-size: var(--hundredsvh);
 }
 
 .header_videos {
@@ -129,6 +131,7 @@ body {
 }
 
 .header_video {
+  opacity: 0;
   inline-size: 100%;
 }
 
@@ -234,16 +237,20 @@ body {
 
 .movie_video_wrapper {
   position: relative;
-  padding: 0 0 56.25%;
+  margin: 0 auto;
+  inline-size: auto;
+  aspect-ratio: 1/0.5625;
+  max-block-size: calc(100vh - 60px);
 }
 
 .movie_video {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
   object-fit: cover;
+  opacity: 0;
+  inline-size: 100%;
+  block-size: 100%;
 }
 
 .movie_place {
@@ -251,19 +258,19 @@ body {
   bottom: 74px;
   left: 50%;
   display: block;
-  width: calc(100% - 40px);
-  max-width: 600px;
   color: #ffffff;
   font-family: var(--stymiehed);
   font-weight: 900;
   font-size: 133px;
   line-height: 64px;
   transform: translate3d(-50%, 0, 0);
+  inline-size: var(--width-standart);
+  max-inline-size: 600px;
 }
 
 .movie_header_text {
   margin: 30px auto 49px;
-  inline-size: calc(100% - 40px);
+  inline-size: var(--width-standart);
   max-inline-size: var(--width-body);
 }
 
@@ -288,7 +295,7 @@ body {
   flex-direction: column;
   gap: 30px;
   margin: 0 auto;
-  inline-size: calc(100% - 40px);
+  inline-size: var(--width-standart);
   max-inline-size: var(--width-body);
 }
 
@@ -350,6 +357,7 @@ body {
 }
 
 .saving_poster {
+  opacity: 0;
   block-size: auto;
   inline-size: 82px;
 }
@@ -423,7 +431,7 @@ body {
   font-size: 23px;
   line-height: 1.25;
   text-align: center;
-  max-inline-size: calc(100% - 40px);
+  max-inline-size: var(--width-standart);
 }
 
 .watchlist_header_subtitle {
@@ -434,7 +442,7 @@ body {
   font-size: 18px;
   line-height: 1.3;
   text-align: center;
-  max-inline-size: calc(100% - 40px);
+  max-inline-size: var(--width-standart);
   inline-size: 420px;
 }
 
@@ -450,11 +458,9 @@ body {
 }
 
 .watchlist_wrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   margin: 0 auto;
   padding: 20px;
+  color: #000;
   text-align: center;
   max-inline-size: 415px;
   inline-size: 415px;
@@ -467,6 +473,14 @@ body {
 
 .want_to_watch_container .watchlist_wrapper {
   background-color: #73d7a0;
+}
+
+.watchlist_empty_messages {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  inline-size: 100%;
+  block-size: 100%;
 }
 
 .watchlist_subtitle {
@@ -484,7 +498,7 @@ body {
 }
 
 .watchlist_ps {
-  max-width: calc(100% - 40px);
+  max-width: var(--width-standart);
   margin: 0 auto 15px;
   font-family: var(--franklin);
   font-weight: 500;
@@ -509,8 +523,9 @@ body {
 .watchlist_posters img {
   border-radius: 3px;
   object-fit: cover;
+  opacity: 0;
   inline-size: var(--img-width);
-  aspect-ratio: 0.675;
+  block-size: auto;
 }
 
 .copy-button {
@@ -549,7 +564,7 @@ body {
   font-size: 16px;
   line-height: 1.4;
   text-align: center;
-  max-inline-size: calc(100% - 40px);
+  max-inline-size: var(--width-standart);
 }
 
 .watchlist_movie_list a:hover {
@@ -561,7 +576,8 @@ body {
 
 @media screen and (max-width: 1024px) {
   .movie_video_wrapper {
-    padding: 0;
+    inline-size: 100%;
+    max-block-size: auto;
   }
 
   .movie_video {
@@ -619,10 +635,6 @@ body {
     inline-size: 100%;
   }
 
-  .watchlist_title {
-    font-size: 34px;
-  }
-
   .watchlist_movie_list {
     font-size: 14px;
   }
@@ -677,10 +689,6 @@ body {
   .checkbox_label span {
     font-size: 21px;
   }
-
-  .watchlist_title {
-    font-size: 26px;
-  }
 }
 
 @media screen and (max-width: 460px) {
@@ -695,19 +703,20 @@ body {
 
 @media (prefers-color-scheme: dark), .dark-theme {
   :root {
+    --white: #fff;
     --background: #121212;
-    --background-reverse: #fff;
+    --background-reverse: var(--white);
     --saving-background: #272728;
     --main-color: #f8f8f8;
-    --body-color: #fff;
+    --body-color: var(--white);
     --color-secondary: #9c9c9c;
     --border: #dfdfdf;
     --border-navigation: rgb(255 255 255 / 24%);
-    --button-border: #fff;
+    --button-border: var(--white);
     --button-background: rgb(255 255 255 / 24%);
     --link-underline: #aaa;
     --link-color: #f8f8f8;
-    --link-border: #f8f8f8;
+    --link-border: var(--link-color);
   }
 
   .movie_quote p:first-child {

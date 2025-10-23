@@ -434,9 +434,11 @@ function renderHeader() {
   container.innerHTML = "";
 
   const indices = new Set();
-  while (indices.size < 12) {
+  const totalVideos = 12;
+  while (indices.size < totalVideos) {
     indices.add(Math.floor(Math.random() * filmsList.length));
   }
+  let loadedCount = 0;
 
   [...indices].forEach((idx, i) => {
     const film = filmsList[idx];
@@ -449,10 +451,16 @@ function renderHeader() {
     video.className = "header_video";
     video.preload = "auto";
     video.loop = video.muted = video.autoplay = video.playsInline = true;
-    // video.autoplay =
-
     video.poster = VideoUtils.getPoster(film.original);
     video.src = `${basicLink}video/mobile/${cleaned}.mp4`;
+    video.addEventListener("loadedmetadata", () => {
+      loadedCount++;
+      if (loadedCount === totalVideos) {
+        container.querySelectorAll(".header_video").forEach((v) => {
+          v.style.opacity = "1";
+        });
+      }
+    });
 
     block.appendChild(document.createElement("div")).className =
       "header_video_wrapper";
@@ -635,6 +643,9 @@ document.addEventListener("DOMContentLoaded", () => {
         isDesktop ? "desktop/" : "mobile/"
       }${cleaned}.mp4`;
       video.poster = VideoUtils.getPoster(film.original);
+      video.addEventListener("loadedmetadata", () => {
+        video.style.opacity = "1";
+      });
 
       clone.querySelector(".movie_place").textContent = film.place;
       clone.querySelector(".movie_name").textContent = film.title;
@@ -666,6 +677,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const poster = clone.querySelector(".saving_poster");
       poster.src = VideoUtils.getCover(film.original);
       poster.alt = film.title;
+      poster.addEventListener("load", () => {
+        poster.style.opacity = "1";
+      });
 
       const seenCheckbox = clone.querySelector('input[name="already-seen"]');
       const wantCheckbox = clone.querySelector('input[name="want-to-watch"]');
@@ -789,6 +803,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // ${getBaseWidth(size) * 2}
       newImg.style.width = `${getBaseWidth(size) * 2}px`;
       newImg.style.borderRadius = `6px`;
+      newImg.style.opacity = `1`;
       newImg.style.objectFit = "contain";
       posters.appendChild(newImg);
     });
@@ -856,6 +871,12 @@ document.addEventListener("DOMContentLoaded", () => {
           }" crossorigin="anonymous">`;
         })
         .join("");
+
+      posters.querySelectorAll("img").forEach((img) => {
+        img.addEventListener("load", () => {
+          img.style.opacity = "1";
+        });
+      });
     }
 
     list.innerHTML = [...set]
