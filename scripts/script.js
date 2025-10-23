@@ -408,7 +408,7 @@ const VideoUtils = {
   },
 
   getCover(original) {
-    return `${basicLink}images/posters/${this.cleanName(original)}.jpg`;
+    return `${basicLink}images/sizes/300/${this.cleanName(original)}.jpg`;
   },
 };
 
@@ -448,7 +448,7 @@ function renderHeader() {
     const video = document.createElement("video");
     video.className = "header_video";
     video.preload = "auto";
-    video.loop = video.muted = video.playsInline = true;
+    video.loop = video.muted = video.autoplay = video.playsInline = true;
     // video.autoplay =
 
     video.poster = VideoUtils.getPoster(film.original);
@@ -505,6 +505,28 @@ function initHeaderScroll() {
   window.addEventListener("scroll", scroll, { passive: true });
 }
 
+function addScrollHandler() {
+  const navHeight = document.querySelector(".navigation").offsetHeight;
+  function handleScroll(selector) {
+    document.querySelectorAll(selector).forEach((container) => {
+      container.addEventListener("click", (e) => {
+        const link = e.target.closest('a[href^="#"]');
+        if (!link) return;
+
+        e.preventDefault();
+        const target = document.querySelector(link.getAttribute("href"));
+        if (target) {
+          const targetPosition =
+            target.getBoundingClientRect().top + window.scrollY - navHeight;
+          window.scrollTo({ top: targetPosition });
+        }
+      });
+    });
+  }
+  handleScroll(".navigation");
+  handleScroll(".watchlist_movie_list");
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const storedTheme = localStorage.getItem("theme");
   if (storedTheme === "dark") {
@@ -545,6 +567,7 @@ document.addEventListener("DOMContentLoaded", () => {
   createWatchlistContainers();
   updateWatchlist();
   updateWatchlistCounts();
+  addScrollHandler();
 
   window.addEventListener("resize", () => {
     if (window.innerWidth > 500 === isDesktop) return;
@@ -696,32 +719,90 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updateWatchlist() {
     updateContainer("have_watched_container", seenSet, "Я видел");
-    updateContainer("want_to_watch_container", wantSet, "Я хочу посмотреть");
+    updateContainer("want_to_watch_container", wantSet, "Я посмотрю");
   }
 
+  function getBaseWidth(size) {
+    const widthMap = {
+      91: 29,
+      74: 32,
+      58: 36,
+      37: 40,
+      31: 50,
+      26: 56,
+      21: 60,
+      17: 64,
+      13: 80,
+      10: 84,
+      7: 100,
+      5: 110,
+      3: 150,
+    };
+
+    const sortedKeys = Object.keys(widthMap)
+      .map(Number)
+      .sort((a, b) => b - a);
+
+    for (const key of sortedKeys) {
+      if (size >= key) return widthMap[key];
+    }
+
+    return 160;
+  }
   function calculateDimensions(size, screenWidth) {
-    let baseWidth = 160;
-
-    if (size >= 91) baseWidth = 29;
-    else if (size >= 74) baseWidth = 32;
-    else if (size >= 58) baseWidth = 36;
-    else if (size >= 37) baseWidth = 40;
-    else if (size >= 31) baseWidth = 50;
-    else if (size >= 26) baseWidth = 56;
-    else if (size >= 21) baseWidth = 60;
-    else if (size >= 17) baseWidth = 64;
-    else if (size >= 13) baseWidth = 80;
-    else if (size >= 10) baseWidth = 84;
-    else if (size >= 7) baseWidth = 100;
-    else if (size >= 5) baseWidth = 110;
-    else if (size >= 3) baseWidth = 150;
-
+    const baseWidth = getBaseWidth(size);
     const reduction = screenWidth < 415 ? (415 - screenWidth) * 0.00241 : 0;
 
     return {
       imgWidth: baseWidth * (1 - reduction),
       scale: 1 - reduction,
     };
+  }
+
+  function createScreenshot(element, width, height) {
+    const clone = element.cloneNode(true);
+    clone.style.backgroundColor = getComputedStyle(element).backgroundColor;
+    clone.style.transform = "scale(1)";
+    clone.style.position = "absolute";
+    clone.style.top = "0";
+    clone.style.left = "0";
+    clone.style.width = `${width}px`;
+    clone.style.maxWidth = `${width}px`;
+    clone.style.height = `${height}px`;
+    clone.style.padding = `60px 20px`;
+
+    const subtitle = clone.querySelector(".watchlist_subtitle");
+    subtitle.style.fontSize = `28px`;
+    subtitle.style.marginBottom = `5px`;
+
+    const title = clone.querySelector(".watchlist_title");
+    title.style.fontSize = `76px`;
+    title.style.marginBottom = `60px`;
+
+    const posters = clone.querySelector(".watchlist_posters");
+    const originalPosters = element.querySelector(".watchlist_posters");
+    const size = posters.querySelectorAll("img").length;
+    posters.innerHTML = "";
+    originalPosters.querySelectorAll("img").forEach((originalImg, index) => {
+      const newImg = document.createElement("img");
+      newImg.src = originalImg.src.replace("posters/", `sizes/320/`);
+      // ${getBaseWidth(size) * 2}
+      newImg.style.width = `${getBaseWidth(size) * 2}px`;
+      newImg.style.borderRadius = `6px`;
+      newImg.style.objectFit = "contain";
+      posters.appendChild(newImg);
+    });
+
+    // const posters = clone.querySelector(".watchlist_posters");
+    // const size = posters.querySelectorAll("img").length;
+    // posters.style.gap = `10px`;
+    // posters.querySelectorAll("img").forEach((img) => {
+    //   img.style.width = `${getBaseWidth(size) * 2}px`;
+    //   img.style.borderRadius = `6px`;
+    // });
+
+    document.body.appendChild(clone);
+    return clone;
   }
 
   function updateContainer(id, set, title) {
@@ -732,15 +813,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const screenWidth = window.innerWidth;
     const { imgWidth, scale } = calculateDimensions(set.size, screenWidth);
     const headerTitle = document.querySelector(".header_title").innerText;
-
     if (!set.size) {
       const message =
         emptyMessages[
           id === "have_watched_container" ? "have_watched" : "want_to_watch"
         ];
       wrapper.innerHTML = `
-            <p class="watchlist_title">${message.first}</p>
+      <div class="watchlist_empty_messages">
+      <p class="watchlist_title">${message.first}</p>
             <p class="watchlist_ps">${message.second}</p>
+            </div>
         `;
       list.innerHTML = "";
       button.disabled = true;
@@ -752,7 +834,7 @@ document.addEventListener("DOMContentLoaded", () => {
       set.size === totalFilms
         ? id === "have_watched_container"
           ? "Я видел все"
-          : "Я хочу посмотреть все"
+          : "Я посмотрю все"
         : title;
 
     wrapper.innerHTML = `
@@ -771,7 +853,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const film = sortedFilms.find((f) => f.place === place);
           return `<img src="${VideoUtils.getCover(film.original)}" alt="${
             film.title
-          }">`;
+          }" crossorigin="anonymous">`;
         })
         .join("");
     }
@@ -784,33 +866,50 @@ document.addEventListener("DOMContentLoaded", () => {
       .join(" ● ");
 
     button.disabled = false;
-    button.textContent = "Скачать";
-    button.onclick = async () => {
-      if (button.disabled) return;
+    const originalText = button.textContent;
+    const screenshotSize = { width: 830, height: 1476 };
 
+    button.onclick = async () => {
       try {
+        if (button.disabled) return;
+
         button.textContent = "Загрузка...";
         button.disabled = true;
 
-        const canvas = await html2canvas(wrapper, {
-          logging: false,
-          useCORS: true,
-          scrollY: -window.scrollY,
+        const clone = createScreenshot(
+          wrapper,
+          screenshotSize.width,
+          screenshotSize.height
+        );
+
+        await new Promise((resolve) => {
+          clone.querySelectorAll("img").forEach((img) => {
+            img.onload = () => {
+              resolve();
+            };
+          });
         });
 
-        const link = document.createElement("a");
-        link.download = "watchlist.jpg";
-        link.href = canvas.toDataURL("image/jpeg", 1.0);
+        try {
+          const canvas = await html2canvas(clone, {
+            width: screenshotSize.width,
+            height: screenshotSize.height,
+            logging: false,
+            useCORS: true,
+          });
 
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+          const link = document.createElement("a");
+          link.href = canvas.toDataURL("image/jpeg", 1.0);
+          link.download = "watchlist.jpg";
+          link.click();
 
-        button.textContent = "Скачать";
-        button.disabled = false;
+          document.body.removeChild(clone);
+        } finally {
+          button.textContent = originalText;
+          button.disabled = false;
+        }
       } catch (error) {
-        button.textContent = "Скачать";
-        button.disabled = false;
+        console.error("Ошибка при создании скриншота:", error);
         alert("Произошла ошибка при создании скриншота");
       }
     };
