@@ -412,7 +412,6 @@ const VideoUtils = {
   },
 };
 
-const logo = document.querySelector(".header_logo");
 function renderHeader() {
   const container = document.querySelector(".header_videos");
   const countEl = document.querySelector(".header_title_count");
@@ -454,29 +453,40 @@ function renderHeader() {
     video.loop = video.muted = video.autoplay = video.playsInline = true;
     video.poster = VideoUtils.getPoster(film.original);
     video.src = `${basicLink}video/mobile/${cleaned}.mp4`;
+
+    const logo = document.querySelector(".header_logo");
+    function checkLogoPosition() {
+      const videos = container.querySelectorAll(".header_video");
+      const [second, third] = [videos[1], videos[2]];
+      const logoRect = logo.getBoundingClientRect();
+      const secondRect = second.getBoundingClientRect();
+      const thirdRect = third.getBoundingClientRect();
+      const isIntersect = (a, b) =>
+        a.left < b.right &&
+        a.right > b.left &&
+        a.top < b.bottom &&
+        a.bottom > b.top;
+      const overlaps =
+        isIntersect(logoRect, secondRect) || isIntersect(logoRect, thirdRect);
+      const darkTheme =
+        document.documentElement.classList.contains("dark-theme");
+      logo.style.filter = darkTheme || overlaps ? "invert(100%)" : "";
+    }
+
     video.addEventListener("loadedmetadata", () => {
       loadedCount++;
 
       if (loadedCount === totalVideos) {
         const videos = container.querySelectorAll(".header_video");
-        const [second, third] = [videos[1], videos[2]];
         videos.forEach((v) => (v.style.opacity = "1"));
-
-        const logoRect = logo.getBoundingClientRect();
-        const secondRect = second.getBoundingClientRect();
-        const thirdRect = third.getBoundingClientRect();
-        const isIntersect = (a, b) =>
-          a.left < b.right &&
-          a.right > b.left &&
-          a.top < b.bottom &&
-          a.bottom > b.top;
-        const overlaps =
-          isIntersect(logoRect, secondRect) || isIntersect(logoRect, thirdRect);
-        logo.style.filter =
-          overlaps || document.documentElement.classList.contains("dark-theme")
-            ? "invert(100%)"
-            : "";
+        checkLogoPosition();
       }
+      window.addEventListener("resize", () => {
+        requestAnimationFrame(checkLogoPosition);
+      });
+      window.addEventListener("DOMContentLoaded", () => {
+        checkLogoPosition();
+      });
     });
 
     block.appendChild(document.createElement("div")).className =
