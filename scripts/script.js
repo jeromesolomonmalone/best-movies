@@ -915,6 +915,7 @@ document.addEventListener("DOMContentLoaded", () => {
           screenshotSize.height
         );
 
+        // Ждем загрузки всех изображений
         await new Promise((resolve) => {
           const images = clone.querySelectorAll("img");
           let loaded = 0;
@@ -930,6 +931,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         try {
+          // Создаем canvas
           const canvas = await html2canvas(clone, {
             width: screenshotSize.width,
             height: screenshotSize.height,
@@ -937,42 +939,36 @@ document.addEventListener("DOMContentLoaded", () => {
             useCORS: true,
           });
 
-          // Преобразуем canvas в blob более надежным способом
+          // Преобразуем в blob
           const blob = await new Promise((resolve) => {
             canvas.toBlob(resolve, "image/jpeg", 1.0);
           });
 
+          // Обработка для iOS
           if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
             try {
+              // Пытаемся использовать стандартный метод
+              const url = URL.createObjectURL(blob);
+              const link = document.createElement("a");
+              link.href = url;
+              link.download = "watchlist.jpg";
+              link.style.display = "none";
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              URL.revokeObjectURL(url);
+            } catch (error) {
+              console.error("Ошибка при сохранении:", error);
+              // Падаем на navigator.share
               if (navigator.canShare && navigator.canShare({ files: [blob] })) {
                 await navigator.share({
                   files: [blob],
                   title: "Скриншот списка фильмов",
                 });
-              } else {
-                // Падение на стандартный метод
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement("a");
-                link.href = url;
-                link.download = "watchlist.jpg";
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                URL.revokeObjectURL(url);
               }
-            } catch (shareError) {
-              console.error("Ошибка при шаре:", shareError);
-              // Падение на стандартный метод загрузки
-              const url = URL.createObjectURL(blob);
-              const link = document.createElement("a");
-              link.href = url;
-              link.download = "watchlist.jpg";
-              document.body.appendChild(link);
-              link.click();
-              document.body.removeChild(link);
-              URL.revokeObjectURL(url);
             }
           } else {
+            // Для других платформ
             const url = URL.createObjectURL(blob);
             const link = document.createElement("a");
             link.href = url;
@@ -981,6 +977,7 @@ document.addEventListener("DOMContentLoaded", () => {
             URL.revokeObjectURL(url);
           }
 
+          // Очищаем DOM
           document.body.removeChild(clone);
         } finally {
           button.textContent = originalText;
@@ -988,7 +985,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       } catch (error) {
         console.error("Ошибка при создании скриншота:", error);
-        alert("Произошла ошибка при создании скриншота");
+        alert(
+          "Произошла ошибка при создании скриншота. Попробуйте обновить страницу."
+        );
       }
     };
   }
