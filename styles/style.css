@@ -74,8 +74,8 @@ body {
   position: absolute;
   left: 50%;
   z-index: 1000;
-  margin: 6px auto;
-  padding: 4px 15px 2px;
+  margin: 10px auto 2px;
+  filter: none;
   transform: translateX(-50%);
   block-size: 26px;
   inline-size: auto;
