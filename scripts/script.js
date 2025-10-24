@@ -916,9 +916,15 @@ document.addEventListener("DOMContentLoaded", () => {
         );
 
         await new Promise((resolve) => {
-          clone.querySelectorAll("img").forEach((img) => {
+          const images = clone.querySelectorAll("img");
+          let loaded = 0;
+
+          images.forEach((img) => {
             img.onload = () => {
-              resolve();
+              loaded++;
+              if (loaded === images.length) {
+                resolve();
+              }
             };
           });
         });
@@ -931,20 +937,48 @@ document.addEventListener("DOMContentLoaded", () => {
             useCORS: true,
           });
 
-          const imageData = canvas.toDataURL("image/jpeg", 1.0);
-          const blob = await fetch(imageData).then((r) => r.blob());
+          // Преобразуем canvas в blob более надежным способом
+          const blob = await new Promise((resolve) => {
+            canvas.toBlob(resolve, "image/jpeg", 1.0);
+          });
 
           if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-            const a = document.createElement("a");
-            a.href = URL.createObjectURL(blob);
-            a.download = "watchlist.jpg";
-            a.click();
-            URL.revokeObjectURL(a.href);
+            try {
+              if (navigator.canShare && navigator.canShare({ files: [blob] })) {
+                await navigator.share({
+                  files: [blob],
+                  title: "Скриншот списка фильмов",
+                });
+              } else {
+                // Падение на стандартный метод
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = "watchlist.jpg";
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+              }
+            } catch (shareError) {
+              console.error("Ошибка при шаре:", shareError);
+              // Падение на стандартный метод загрузки
+              const url = URL.createObjectURL(blob);
+              const link = document.createElement("a");
+              link.href = url;
+              link.download = "watchlist.jpg";
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              URL.revokeObjectURL(url);
+            }
           } else {
+            const url = URL.createObjectURL(blob);
             const link = document.createElement("a");
-            link.href = imageData;
+            link.href = url;
             link.download = "watchlist.jpg";
             link.click();
+            URL.revokeObjectURL(url);
           }
 
           document.body.removeChild(clone);
