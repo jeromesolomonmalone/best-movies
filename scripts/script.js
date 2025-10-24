@@ -11,7 +11,7 @@ const films = {
       {
         quote:
           "Я смотрел его три или четыре раза, это просто потрясающая режиссёрская работа. И это при том, что я не люблю мюзиклы.",
-        who: "Кристофер Нолан, режиссер",
+        who: "Кристофер Нолан, режиссёр",
       },
     ],
     link: "https://www.kinopoisk.ru/film/841081/",
@@ -93,7 +93,7 @@ const films = {
     year: 2016,
     place: 9,
     opinion:
-      "Режиссер Том Форд создал визуально безупречное произведение, где каждый кадр словно сошёл с подиума высокой моды. Джейк Джилленхол в двойной роли демонстрирует впечатляющую трансформацию эмоций, особенно в сценах, где его глаза говорят больше слов. Но самый главный перфоманс демонстрирует Аарон Тейлор-Джонсон в роли антагониста-психопата — его образ настолько пугающий, что вызывает мурашки по коже, за что он справедливо получил признание критиков в виде «Золотого глобуса». И всё это дополняется двумя переплетающимися сюжетами, создающими уникальную структуру повествования, где реальность и вымысел сливаются в единое целое.",
+      "Режиссёр Том Форд создал визуально безупречное произведение, где каждый кадр словно сошёл с подиума высокой моды. Джейк Джилленхол в двойной роли демонстрирует впечатляющую трансформацию эмоций, особенно в сценах, где его глаза говорят больше слов. Но самый главный перфомансс демонстрирует Аарон Тейлор-Джонсон в роли антагониста-психопата — его образ настолько пугающий, что вызывает мурашки по коже, за что он справедливо получил признание критиков в виде «Золотого глобуса». И всё это дополняется двумя переплетающимися сюжетами, создающими уникальную структуру повествования, где реальность и вымысел сливаются в единое целое.",
     link: "https://www.kinopoisk.ru/film/909898/",
   },
   Выживший: {
@@ -103,12 +103,12 @@ const films = {
     year: 2015,
     place: 10,
     opinion:
-      "Величественная красота дикой природы в «Выжившем» завораживает с первых минут. Снятые при естественном освещении кадры создают неповторимую атмосферу, где холодные пейзажи соседствуют с теплыми оттенками, даря зрителю парадоксальное чувство одиночества и умиротворения одновременно. Леонардо ДиКаприо, как всегда, блестяще справляется с ролью, и «Оскар» за этот фильм — заслуженная награда не только для актера, но и для всех его фанатов.",
+      "Величественная красота дикой природы в «Выжившем» завораживает с первых минут. Снятые при естественном освещении кадры создают неповторимую атмосферу, где холодные пейзажи соседствуют с теплыми оттенками, даря зрителю парадоксальное чувство одиночества и умиротворения одновременно. Леонардо ДиКаприо, как всегда, блестяще справляется с ролью, и «Оскар» за этот фильм — заслуженная награда не только для актёра, но и для всех его фанатов.",
     quote: [
       {
         quote:
           "Я ставлю Алехандро в один ряд с мастерами живописи. Сделан огромный шаг в техническом плане, люди проделали колоссальную работу. Я не видел ничего подобного с точки зрения натурализма — визуального реализма. Поэзия, достигнутая с помощью новейших технологий. Я рад, что мы существуем в культуре, способной оценить такое искусство и признать, что оно нам необходимо.",
-        who: "Шон Пенн, актер, режиссер",
+        who: "Шон Пенн, актёр, режиссёр",
       },
     ],
     link: "https://www.kinopoisk.ru/film/522941/",
@@ -120,7 +120,7 @@ const films = {
     year: 2017,
     place: 11,
     opinion:
-      "«Малыш на драйве» поражает своим уникальным подходом к сочетанию музыки и экшена. Каждая сцена, от динамичных погонь до диалоговых эпизодов, пропитана особой энергетикой благодаря безупречному саундтреку и отточенному монтажу, а звездный актерский состав делает этот криминальный триллер по-настоящему запоминающимся.",
+      "«Малыш на драйве» поражает своим уникальным подходом к сочетанию музыки и экшена. Каждая сцена, от динамичных погонь до диалоговых эпизодов, пропитана особой энергетикой благодаря безупречному саундтреку и отточенному монтажу, а звездный актёрский состав делает этот криминальный триллер по-настоящему запоминающимся.",
     link: "https://www.kinopoisk.ru/film/902939/",
   },
   "Джанго освобожденный": {
@@ -258,18 +258,18 @@ const films = {
     quote: [
       {
         quote:
-          "В фильме все всегда находится в действии. Все прошлые события, связанные с героями, показаны очень естественно. Камера всегда движется и никогда не задерживается долго на чем-то одном. Меня это очень вдохновило.",
-        who: "Пон Чжун Хо, режиссер",
+          "В фильме всё всегда находится в действии. Все прошлые события, связанные с героями, показаны очень естественно. Камера всегда движется и никогда не задерживается долго на чём-то одном. Меня это очень вдохновило.",
+        who: "Пон Чжун Хо, режиссёр",
       },
       {
         quote:
           "Я посмотрел «Дорогу ярости» и не понимаю, как Джордж Миллер это сделал. Я не понимаю, как в процессе съёмок не умерли сотни людей. Вокруг было столько реальных выстрелов… Меня поражает та координация действий, с которой каждый подошёл к своему делу. Сценарий великолепен, постановка изумительна, идеи велики. Он исключительный постановщик.",
-        who: "Стивен Содерберг, режиссер",
+        who: "Стивен Содерберг, режиссёр",
       },
       {
         quote:
           "Это визуально впечатляюще. Это безумие, но таков Джордж. Он учёный, он Эйнштейн монтажа и способен собрать воедино всё необходимое, чтобы создать по-настоящему захватывающую сцену.",
-        who: "Мел Гибсон, актёр, режиссер",
+        who: "Мел Гибсон, актёр, режиссёр",
       },
     ],
     link: "https://www.kinopoisk.ru/film/453406/",
@@ -281,7 +281,7 @@ const films = {
     year: 2000,
     place: 23,
     opinion:
-      "«Большой куш» — вершина творчества молодого Гая Ричи, ещё не покорившегося студийным канонам. Фильм демонстрирует непревзойдённый талант Ричи создавать неповторимые криминальные истории. Хитросплетённый сюжет не даёт оторваться от экрана, а каждый персонаж, от главных до второстепенных, становится незабываемым. Даже Брэд Питт, очарованный талантом режиссёра, сам изъявил желание поработать с Ричи и блестяще воплотил образ легендарного цыгана-боксера Микки, чья харизма в сочетании с актёрским мастерством сделала персонажа культовым. Лента покоряет своим уникальным стилем, искромётным чёрным юмором и остроумными диалогами, которые мгновенно ушли в народ, и безупречной режиссурой, оставаясь вершиной творчества Ричи.",
+      "«Большой куш» — вершина творчества молодого Гая Ричи, ещё не покорившегося студийным канонам. Фильм демонстрирует непревзойдённый талант Ричи создавать неповторимые криминальные истории. Хитросплетённый сюжет не даёт оторваться от экрана, а каждый персонаж, от главных до второстепенных, становится незабываемым. Даже Брэд Питт, очарованный талантом режиссёра, сам изъявил желание поработать с Ричи и блестяще воплотил образ легендарного цыгана-боксера Микки, чья харизма в сочетании с актёрским мастерством сделала персонажа культовым. Лента покоряет своим уникальным стилем, искромётным чёрным юмором и остроумными диалогами, которые мгновенно ушли в народ, а безупречная режиссура делает картину по-настоящему выдающейся.",
     link: "https://www.kinopoisk.ru/film/526/",
   },
   Дюна: {
@@ -296,12 +296,12 @@ const films = {
       {
         quote:
           "Дени Вильнёв снял один из самых блестящих научно-фантастических фильмов, которые я когда-либо видел.",
-        who: "Стивен Спилберг, режиссер",
+        who: "Стивен Спилберг, режиссёр",
       },
       {
         quote:
           "Я очень люблю этот фильм. По прошествии двух с половиной часов я не хотел, чтобы это закончилось. Я хотел ещё больше. Меня поражает в «Дюне» то, что она поистине эпична.",
-        who: "Джеймс Кэмерон, режиссер",
+        who: "Джеймс Кэмерон, режиссёр",
       },
     ],
     link: "https://www.kinopoisk.ru/film/409424/",
@@ -318,7 +318,7 @@ const films = {
       {
         quote:
           "Этот фильм настолько насыщен идеями, что ваше сознание не может отвлечься ни на что, кроме происходящего на экране. О, и у него неоднозначная концовка, которая, возможно, является одной из лучших за всё время.",
-        who: "Джош Сэфди, режиссер",
+        who: "Джош Сэфди, режиссёр",
       },
     ],
     link: "https://www.kinopoisk.ru/film/81314/",
@@ -335,7 +335,7 @@ const films = {
       {
         quote:
           "Это очень длинный фильм, но он не кажется затянутым. В нём есть что-то особенное в темпе повествования и энергетике. Я думаю: «Как, чёрт возьми, Скорсезе удалось это сделать в его возрасте?» Он просто проникся этим маниакальным безумием.",
-        who: "Бенни Сэфди, режиссер, актёр",
+        who: "Бенни Сэфди, режиссёр, актёр",
       },
     ],
     link: "https://www.kinopoisk.ru/film/462682/",
@@ -377,7 +377,7 @@ const films = {
     year: 2009,
     place: 30,
     opinion:
-      "«Сити-Айленд» — удивительно недооценённый фильм, который очаровывает своей душевностью и искренностью. Действие разворачивается не в самом Нью-Йорке, а в его уютном пригороде, где живёт обычная семья, и это создаёт особую атмосферу домашнего уюта и тепла. Энди Гарсия в главной роли — настоящее украшение картины, а Финальная сцена, в которой все накопленные противоречия и эмоции главного героя находят своё яркое, комичное разрешение, по силе эмоционального воздействия не уступает знаменитому финалу «Однажды в… Голливуде». Это именно тот фильм, который хочется пересматривать снова и снова.",
+      "«Сити-Айленд» — удивительно недооценённый фильм, который очаровывает своей душевностью и искренностью. Действие разворачивается не в самом Нью-Йорке, а в его уютном пригороде, где живёт обычная семья, и это создаёт особую атмосферу домашнего уюта и тепла. Энди Гарсия в главной роли — настоящее украшение картины, а финальная сцена, в которой все накопленные противоречия и эмоции главного героя находят своё яркое, комичное разрешение, по силе эмоционального воздействия не уступает знаменитому финалу «Однажды в… Голливуде». Это именно тот фильм, который хочется пересматривать снова и снова.",
     link: "https://www.kinopoisk.ru/film/418802/",
   },
 };
@@ -567,6 +567,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     template.remove();
   }
+  const watchlistTitles = {
+    seen: document.querySelector(".navigation_watchlist p:first-child")
+      .textContent,
+    want: document.querySelector(".navigation_watchlist p:nth-child(2)")
+      .textContent,
+  };
 
   renderHeader();
   initHeaderScroll();
@@ -732,8 +738,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function updateWatchlist() {
-    updateContainer("have_watched_container", seenSet, "Я видел");
-    updateContainer("want_to_watch_container", wantSet, "Я посмотрю");
+    updateContainer("have_watched_container", seenSet, watchlistTitles.seen);
+    updateContainer("want_to_watch_container", wantSet, watchlistTitles.want);
   }
 
   function getBaseWidth(size) {
@@ -776,45 +782,48 @@ document.addEventListener("DOMContentLoaded", () => {
   function createScreenshot(element, width, height) {
     const clone = element.cloneNode(true);
     clone.style.backgroundColor = getComputedStyle(element).backgroundColor;
-    clone.style.transform = "scale(1)";
+    clone.style.transform = "none";
+    clone.style.boxSizing = "border-box";
+    clone.style.margin = "0";
     clone.style.position = "absolute";
     clone.style.top = "0";
     clone.style.left = "0";
     clone.style.width = `${width}px`;
     clone.style.maxWidth = `${width}px`;
     clone.style.height = `${height}px`;
-    clone.style.padding = `60px 20px`;
+    clone.style.padding = `290px 125px`;
 
     const subtitle = clone.querySelector(".watchlist_subtitle");
-    subtitle.style.fontSize = `28px`;
-    subtitle.style.marginBottom = `5px`;
+    subtitle.style.fontSize = `79px`;
 
     const title = clone.querySelector(".watchlist_title");
-    title.style.fontSize = `76px`;
-    title.style.marginBottom = `60px`;
+    title.style.fontSize = `232px`;
+    title.style.marginBottom = `160px`;
+
+    const logo = clone.querySelector(".watchlist_logo");
+    logo.style.height = `230px`;
+    logo.style.width = `auto`;
+    logo.style.bottom = "145px";
+    logo.style.right = "145px";
 
     const posters = clone.querySelector(".watchlist_posters");
     const originalPosters = element.querySelector(".watchlist_posters");
     const size = posters.querySelectorAll("img").length;
+    posters.style.height = `78.65%`;
+    posters.style.gap = `30px`;
     posters.innerHTML = "";
     originalPosters.querySelectorAll("img").forEach((originalImg, index) => {
       const newImg = document.createElement("img");
-      newImg.src = originalImg.src.replace("posters/", `sizes/320/`);
-      // ${getBaseWidth(size) * 2}
-      newImg.style.width = `${getBaseWidth(size) * 2}px`;
-      newImg.style.borderRadius = `6px`;
+      newImg.src = originalImg.src.replace(
+        "posters/",
+        `sizes/${getBaseWidth(size) * 6}/`
+      );
+      newImg.style.width = `${getBaseWidth(size) * 6}px`;
+      newImg.style.borderRadius = `20px`;
       newImg.style.opacity = `1`;
       newImg.style.objectFit = "contain";
       posters.appendChild(newImg);
     });
-
-    // const posters = clone.querySelector(".watchlist_posters");
-    // const size = posters.querySelectorAll("img").length;
-    // posters.style.gap = `10px`;
-    // posters.querySelectorAll("img").forEach((img) => {
-    //   img.style.width = `${getBaseWidth(size) * 2}px`;
-    //   img.style.borderRadius = `6px`;
-    // });
 
     document.body.appendChild(clone);
     return clone;
@@ -828,6 +837,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const screenWidth = window.innerWidth;
     const { imgWidth, scale } = calculateDimensions(set.size, screenWidth);
     const headerTitle = document.querySelector(".header_title").innerText;
+    const wrapperLogo = `${basicLink}images/letter.png`;
     if (!set.size) {
       const message =
         emptyMessages[
@@ -837,6 +847,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="watchlist_empty_messages">
       <p class="watchlist_title">${message.first}</p>
             <p class="watchlist_ps">${message.second}</p>
+            <img class="watchlist_logo" src="${wrapperLogo}"/>
             </div>
         `;
       list.innerHTML = "";
@@ -848,14 +859,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const newTitle =
       set.size === totalFilms
         ? id === "have_watched_container"
-          ? "Я видел все"
-          : "Я посмотрю все"
+          ? watchlistTitles.seen + " все"
+          : watchlistTitles.want + " все"
         : title;
 
     wrapper.innerHTML = `
         <h4 class="watchlist_subtitle">${headerTitle}</h4>
-        <p class="watchlist_title">${newTitle} ${set.size}</p>
+        <p class="watchlist_title">${newTitle}&nbsp;${set.size}.</p>
         <div class="watchlist_posters"></div>
+        <img class="watchlist_logo" src="${wrapperLogo}"/>
     `;
     const posters = container.querySelector(".watchlist_posters");
 
@@ -888,7 +900,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     button.disabled = false;
     const originalText = button.textContent;
-    const screenshotSize = { width: 830, height: 1476 };
+    const screenshotSize = { width: 2491, height: 4428 };
 
     button.onclick = async () => {
       try {
@@ -923,33 +935,11 @@ document.addEventListener("DOMContentLoaded", () => {
           const blob = await fetch(imageData).then((r) => r.blob());
 
           if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-            const url = URL.createObjectURL(blob);
-            if (
-              navigator.canShare &&
-              navigator.canShare({
-                files: [blob],
-              })
-            ) {
-              navigator
-                .share({
-                  files: [blob],
-                  title: "Скриншот списка фильмов",
-                })
-                .then(() => {
-                  URL.revokeObjectURL(url);
-                })
-                .catch((error) => {
-                  console.error("Ошибка при шаре:", error);
-                });
-            } else {
-              const link = document.createElement("a");
-              link.href = url;
-              link.download = "watchlist.jpg";
-              document.body.appendChild(link);
-              link.click();
-              document.body.removeChild(link);
-              URL.revokeObjectURL(url);
-            }
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "watchlist.jpg";
+            a.click();
+            URL.revokeObjectURL(a.href);
           } else {
             const link = document.createElement("a");
             link.href = imageData;
