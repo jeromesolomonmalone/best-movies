@@ -923,11 +923,33 @@ document.addEventListener("DOMContentLoaded", () => {
           const blob = await fetch(imageData).then((r) => r.blob());
 
           if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-            const a = document.createElement("a");
-            a.href = URL.createObjectURL(blob);
-            a.download = "watchlist.jpg";
-            a.click();
-            URL.revokeObjectURL(a.href);
+            const url = URL.createObjectURL(blob);
+            if (
+              navigator.canShare &&
+              navigator.canShare({
+                files: [blob],
+              })
+            ) {
+              navigator
+                .share({
+                  files: [blob],
+                  title: "Скриншот списка фильмов",
+                })
+                .then(() => {
+                  URL.revokeObjectURL(url);
+                })
+                .catch((error) => {
+                  console.error("Ошибка при шаре:", error);
+                });
+            } else {
+              const link = document.createElement("a");
+              link.href = url;
+              link.download = "watchlist.jpg";
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              URL.revokeObjectURL(url);
+            }
           } else {
             const link = document.createElement("a");
             link.href = imageData;
