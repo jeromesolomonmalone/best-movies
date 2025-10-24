@@ -78,6 +78,7 @@ body {
   filter: none;
   transform: translateX(-50%);
   block-size: 26px;
+  min-block-size: 26px;
   inline-size: auto;
 }
 
