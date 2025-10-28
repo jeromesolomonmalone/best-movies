@@ -456,21 +456,19 @@ function renderHeader() {
 
     const logo = document.querySelector(".header_logo");
     function checkLogoPosition() {
-      const videos = container.querySelectorAll(".header_video");
+      const videos = container.querySelectorAll(".header_video_block");
       const [second, third] = [videos[1], videos[2]];
       const logoRect = logo.getBoundingClientRect();
       const secondRect = second.getBoundingClientRect();
       const thirdRect = third.getBoundingClientRect();
-      const isIntersect = (a, b) =>
-        a.left < b.right &&
-        a.right > b.left &&
-        a.top < b.bottom &&
-        a.bottom > b.top;
-      const overlaps =
-        isIntersect(logoRect, secondRect) || isIntersect(logoRect, thirdRect);
+      const logoTopCrossesSecond = logoRect.top >= secondRect.top;
+      const logoTopCrossesThird = logoRect.top >= thirdRect.top;
       const darkTheme =
         document.documentElement.classList.contains("dark-theme");
-      logo.style.filter = darkTheme || overlaps ? "invert(100%)" : "";
+      logo.style.filter =
+        darkTheme || logoTopCrossesSecond || logoTopCrossesThird
+          ? "invert(100%)"
+          : "";
     }
 
     video.addEventListener("loadedmetadata", () => {
@@ -481,12 +479,12 @@ function renderHeader() {
         videos.forEach((v) => (v.style.opacity = "1"));
         checkLogoPosition();
       }
-      window.addEventListener("resize", () => {
-        requestAnimationFrame(checkLogoPosition);
-      });
-      window.addEventListener("DOMContentLoaded", () => {
-        checkLogoPosition();
-      });
+    });
+    window.addEventListener("resize", () => {
+      requestAnimationFrame(checkLogoPosition);
+    });
+    window.addEventListener("DOMContentLoaded", () => {
+      checkLogoPosition();
     });
 
     block.appendChild(document.createElement("div")).className =
