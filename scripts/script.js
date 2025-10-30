@@ -497,6 +497,36 @@ function renderHeader() {
   }
   let loadedCount = 0;
 
+  function checkLogoPosition() {
+    const blocks = container.querySelectorAll(".header_video_block");
+    const second = blocks[1];
+    const third = blocks[2];
+
+    if (!second || !third) return;
+
+    const logo = document.querySelector(".header_logo");
+    if (!logo) return;
+
+    const logoRect = logo.getBoundingClientRect();
+    const secondRect = second.getBoundingClientRect();
+    const thirdRect = third.getBoundingClientRect();
+
+    // Проверяем: верхняя граница логотипа ≥ верхней границы блока
+    const logoTopCrossesSecond = logoRect.top >= secondRect.top;
+    const logoTopCrossesThird = logoRect.top >= thirdRect.top;
+    const darkTheme = document.documentElement.classList.contains("dark-theme");
+
+    logo.style.filter =
+      darkTheme || logoTopCrossesSecond || logoTopCrossesThird
+        ? "invert(100%)"
+        : "";
+  }
+
+  window.addEventListener("resize", () => {
+    requestAnimationFrame(checkLogoPosition);
+  });
+  document.addEventListener("DOMContentLoaded", checkLogoPosition);
+
   [...indices].forEach((idx, i) => {
     const film = filmsList[idx];
     const cleaned = VideoUtils.cleanName(film.original);
@@ -506,10 +536,15 @@ function renderHeader() {
 
     const video = document.createElement("video");
     video.className = "header_video";
-    video.preload = "auto";
+    video.preload = "metadata";
     video.loop = video.muted = video.autoplay = video.playsInline = true;
     video.poster = VideoUtils.getPoster(film.original);
-    video.src = `${basicLink}video/mobile/${cleaned}.mp4`;
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "header_video_wrapper";
+    block.appendChild(wrapper);
+    wrapper.appendChild(video);
+    container.appendChild(block);
 
     const logo = document.querySelector(".header_logo");
     function checkLogoPosition() {
@@ -537,17 +572,7 @@ function renderHeader() {
         checkLogoPosition();
       }
     });
-    window.addEventListener("resize", () => {
-      requestAnimationFrame(checkLogoPosition);
-    });
-    window.addEventListener("DOMContentLoaded", () => {
-      checkLogoPosition();
-    });
-
-    block.appendChild(document.createElement("div")).className =
-      "header_video_wrapper";
-    block.firstChild.appendChild(video);
-    container.appendChild(block);
+    video.src = `${basicLink}video/mobile/${cleaned}.mp4`;
   });
 }
 function initHeaderScroll() {
